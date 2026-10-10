@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Arquivo de Personagens | Faultline</title>
+
+    <link rel="stylesheet" href="src/css/global.css">
+    <link rel="stylesheet" href="src/css/characters.css">
+</head>
+
+<body>
+    <main id="character-archive">
+
+        <!-- Cabeçalho da página -->
+        <header class="archive-header">
+            <div class="header-navigation">
+                <a href="index.html" class="back-link">
+                    &larr; Menu principal
+                </a>
+
+                <span class="archive-label">FAULTLINE / ARQUIVO</span>
+            </div>
+
+            <div class="archive-heading">
+                <div>
+                    <p class="eyebrow">REGISTROS DE IDENTIDADE</p>
+                    <h1>Personagens</h1>
+                    <p class="archive-description">
+                        Gerencie suas fichas e prepare sua equipe.
+                    </p>
+                </div>
+
+                <a
+                    href="character-creator.html"
+                    class="primary-button"
+                    id="create-character-button"
+                >
+                    <span aria-hidden="true">+</span>
+                    Nova ficha
+                </a>
+            </div>
+        </header>
+
+        <!-- Resumo do arquivo -->
+        <section class="archive-summary" aria-label="Resumo do arquivo">
+            <div class="summary-item">
+                <span class="summary-label">FICHAS REGISTRADAS</span>
+                <strong id="character-count">0</strong>
+            </div>
+
+            <div class="summary-item">
+                <span class="summary-label">LIMITE DE EQUIPE</span>
+                <strong>3 personagens</strong>
+            </div>
+        </section>
+
+        <!-- Área principal das fichas -->
+        <section class="archive-content" aria-labelledby="list-title">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">BANCO DE DADOS</p>
+                    <h2 id="list-title">Fichas registradas</h2>
+                </div>
+
+                <label class="search-field" for="character-search">
+                    <span class="visually-hidden">Buscar personagem</span>
+                    <input
+                        type="search"
+                        id="character-search"
+                        placeholder="Buscar por nome..."
+                        autocomplete="off"
+                    >
+                </label>
+            </div>
+
+            <!-- JavaScript adicionará os cartões aqui -->
+            <div id="character-list" class="character-grid">
+
+                <!-- Estado inicial: arquivo vazio -->
+                <div id="empty-state" class="empty-state">
+                    <p class="empty-symbol" aria-hidden="true">///</p>
+
+                    <h3>Nenhum registro encontrado</h3>
+
+                    <p>
+                        Ainda não há personagens neste arquivo.
+                        Crie sua primeira ficha para começar.
+                    </p>
+
+                    <a
+                        href="character-creator.html"
+                        class="secondary-button"
+                    >
+                        Criar primeira ficha
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Rodapé -->
+        <footer class="archive-footer">
+            <span>FAULTLINE</span>
+            <span>ARQUIVO DE PERSONAGENS</span>
+        </footer>
+
+    </main>
+
+    <script src="src/js/characters/Character.js"></script>
+    <script src="src/js/characters/characterManager.js"></script>
+    <script src="src/js/pages/charactersPage.js"></script>
+</body>
+</html>

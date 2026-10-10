@@ -1,0 +1,602 @@
+/* Estrutura principal */
+
+#character-archive {
+    position: relative;
+    isolation: isolate;
+
+    width: 100%;
+    min-height: 100vh;
+    padding: 2.5rem 7%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+
+    background: var(--color-background);
+}
+
+/* Imagem de fundo desfocada */
+#character-archive::before {
+    content: "";
+    position: fixed;
+    inset: -15px;
+    z-index: -2;
+    pointer-events: none;
+
+    background-image: url("../assets/images/backgrounds/MenuBG.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    filter: blur(6px);
+    opacity: 0.35;
+}
+
+/* Camada escura para preservar a identidade visual */
+#character-archive::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(16, 16, 20, 0.88) 0%,
+            rgba(16, 16, 20, 0.78) 50%,
+            rgba(16, 16, 20, 0.88) 100%
+        ),
+        rgba(16, 16, 20, 0.25);
+}
+
+
+/* ========================================
+   CABEÇALHO
+   ======================================== */
+
+.archive-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.header-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.back-link {
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: var(--color-text);
+}
+
+.archive-label {
+    color: var(--color-primary);
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 0.16em;
+}
+
+.archive-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+}
+
+.eyebrow {
+    margin: 0 0 0.75rem;
+    color: var(--color-primary);
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+}
+
+.archive-heading h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.archive-description {
+    margin: 0.75rem 0 0;
+    color: var(--color-muted);
+    line-height: 1.6;
+}
+
+/* ========================================
+   BOTÕES
+   ======================================== */
+
+.primary-button,
+.secondary-button {
+    min-height: 46px;
+    padding: 0.85rem 1.25rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.65rem;
+
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-decoration: none;
+
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.primary-button {
+    flex-shrink: 0;
+    color: var(--color-text);
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.primary-button span {
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+.primary-button:hover {
+    background: #c03442;
+    border-color: #c03442;
+    transform: translateY(-2px);
+}
+
+.secondary-button {
+    color: var(--color-text);
+    background: transparent;
+    border-color: var(--color-border);
+}
+
+.secondary-button:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--color-primary);
+}
+
+/* ========================================
+   RESUMO DO ARQUIVO
+   ======================================== */
+
+.archive-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    background: rgba(27, 27, 34, 0.78);
+    border: 1px solid rgba(70, 67, 74, 0.85);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.summary-item {
+    min-width: 0;
+    padding: 1.4rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.summary-item + .summary-item {
+    border-left: 1px solid var(--color-border);
+}
+
+.summary-label {
+    color: var(--color-muted);
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 0.13em;
+}
+
+.summary-item strong {
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+/* ========================================
+   LISTA DE PERSONAGENS
+   ======================================== */
+
+.archive-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Campo de busca */
+
+.search-field {
+    width: min(100%, 300px);
+}
+
+.search-field input {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0;
+    outline: none;
+
+    font-size: 0.85rem;
+    transition: border-color 0.2s ease;
+}
+
+.search-field input::placeholder {
+    color: var(--color-muted);
+}
+
+.search-field input:focus {
+    border-color: var(--color-primary);
+}
+
+/* A grade será preenchida pelo JavaScript */
+
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: stretch;
+}
+
+/* ========================================
+   ESTADO VAZIO
+   ======================================== */
+
+.empty-state {
+    grid-column: 1 / -1;
+    min-height: 280px;
+    padding: 2.5rem 1.5rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    text-align: center;
+
+    background: rgba(27, 27, 34, 0.76);
+    border: 1px dashed var(--color-border);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.empty-symbol {
+    margin: 0;
+    color: var(--color-primary);
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+}
+
+.empty-state h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.empty-state > p:not(.empty-symbol) {
+    max-width: 400px;
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.empty-state .secondary-button {
+    margin-top: 0.5rem;
+}
+
+/* Classe utilitária para acessibilidade */
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ========================================
+   RODAPÉ
+   ======================================== */
+
+.archive-footer {
+    margin-top: auto;
+    padding-top: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+    color: var(--color-muted);
+    border-top: 1px solid var(--color-border);
+
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 0.13em;
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+
+/* Tablets e telas intermediárias */
+
+@media (max-width: 900px) {
+    #character-archive {
+        padding: 2rem 5%;
+    }
+
+    .character-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Celulares */
+
+@media (max-width: 600px) {
+    #character-archive {
+        padding: 1.25rem 1rem;
+        gap: 2rem;
+    }
+
+    .archive-header {
+        gap: 1.75rem;
+    }
+
+    .header-navigation {
+        align-items: flex-start;
+    }
+
+    .archive-label {
+        font-size: 0.6rem;
+        text-align: right;
+    }
+
+    .archive-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .archive-heading h1 {
+        font-size: 2rem;
+    }
+
+    .archive-heading .primary-button {
+        width: 100%;
+    }
+
+    .archive-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-item {
+        padding: 1.1rem 1rem;
+    }
+
+    .summary-item + .summary-item {
+        border-left: none;
+        border-top: 1px solid var(--color-border);
+    }
+
+    .section-heading {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .search-field {
+        width: 100%;
+    }
+
+    .character-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .empty-state {
+        min-height: 250px;
+        padding: 2rem 1rem;
+    }
+
+    .archive-footer {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+}
+
+/* Respeita usuários que preferem menos animações */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
+
+/* ========================================
+   LAYOUT COMPACTO — JANELA NORMAL
+   ======================================== */
+
+#character-archive {
+    min-height: 100vh;
+    padding: clamp(1rem, 3vh, 1.75rem) 6%;
+    gap: clamp(1rem, 2.5vh, 1.5rem);
+}
+
+/* Cabeçalho mais compacto */
+
+.archive-header {
+    gap: clamp(1rem, 2.5vh, 1.5rem);
+}
+
+.header-navigation {
+    padding-bottom: 0.65rem;
+}
+
+.archive-heading h1 {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+
+.archive-description {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+}
+
+.eyebrow {
+    margin-bottom: 0.4rem;
+    font-size: 0.65rem;
+}
+
+/* Botões menores */
+
+.primary-button,
+.secondary-button {
+    min-height: 38px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.75rem;
+}
+
+.primary-button span {
+    font-size: 1.1rem;
+}
+
+/* Resumo mais baixo */
+
+.archive-summary {
+    flex-shrink: 0;
+}
+
+.summary-item {
+    padding: 0.8rem 1.2rem;
+    gap: 0.35rem;
+}
+
+.summary-label {
+    font-size: 0.6rem;
+}
+
+.summary-item strong {
+    font-size: 1.1rem;
+}
+
+/* Lista e busca */
+
+.archive-content {
+    gap: 1rem;
+}
+
+.section-heading h2 {
+    font-size: 1.25rem;
+}
+
+.search-field input {
+    min-height: 38px;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.8rem;
+}
+
+/* Área vazia mais compacta */
+
+.empty-state {
+    min-height: 190px;
+    padding: 1.5rem 1rem;
+    gap: 0.65rem;
+}
+
+.empty-symbol {
+    font-size: 1.5rem;
+}
+
+.empty-state h3 {
+    font-size: 0.95rem;
+}
+
+.empty-state > p:not(.empty-symbol) {
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+/* Rodapé compacto */
+
+.archive-footer {
+    padding-top: 0.75rem;
+    font-size: 0.6rem;
+}
+
+/* Telas com pouca altura, como notebooks */
+
+@media (min-width: 601px) and (max-height: 800px) {
+    #character-archive {
+        padding-top: 0.85rem;
+        padding-bottom: 0.85rem;
+        gap: 0.85rem;
+    }
+
+    .archive-header {
+        gap: 0.85rem;
+    }
+
+    .archive-heading h1 {
+        font-size: 1.8rem;
+    }
+
+    .archive-summary .summary-item {
+        padding: 0.55rem 1rem;
+    }
+
+    .empty-state {
+        min-height: 145px;
+    }
+
+    .archive-footer {
+        padding-top: 0.5rem;
+    }
+}
