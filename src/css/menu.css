@@ -1,0 +1,222 @@
+/* Menu principal */
+
+#main-menu {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    gap: 1.2rem;
+    padding: 5rem 8%;
+
+    text-align: left;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(16, 16, 20, 0.88) 0%,
+            rgba(16, 16, 20, 0.55) 45%,
+            rgba(16, 16, 20, 0.15) 100%
+        ),
+        url("../assets/images/backgrounds/MenuBG.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Detalhe decorativo superior */
+
+#main-menu::before {
+    content: "";
+
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    right: 2rem;
+
+    height: 1px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--color-primary),
+        transparent
+    );
+
+    opacity: 0.8;
+}
+
+/* Título */
+
+
+#main-menu h1 {
+    margin: 0;
+    color: var(--color-text);
+
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    font-weight: 800;
+    letter-spacing: 0.2em;
+
+    text-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.9),
+        0 0 30px rgba(166, 41, 53, 0.2);
+}
+
+#main-menu p {
+    margin: 0 0 1.2rem;
+
+    color: var(--color-muted);
+    font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+#menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+
+    width: min(100%, 290px);
+}
+
+/* Botões estilizados */
+#menu-buttons button {
+    position: relative;
+
+    width: 100%;
+    min-height: 48px;
+    padding: 0.8rem 1.2rem;
+
+    color: var(--color-text);
+    background: rgba(16, 16, 20, 0.78);
+
+    border: 1px solid rgba(232, 229, 226, 0.22);
+    border-left: 3px solid var(--color-primary);
+
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: left;
+
+    cursor: pointer;
+    overflow: hidden;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+#menu-buttons button::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(
+        100deg,
+        rgba(166, 41, 53, 0.2),
+        transparent 65%
+    );
+
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+/* Interação com o mouse */
+
+#menu-buttons button:hover {
+    background-color: rgba(38, 24, 30, 0.95);
+
+    border-color: var(--color-primary);
+    border-left-width: 5px;
+
+    transform: translateX(5px);
+
+    box-shadow: 0 0 18px rgba(166, 41, 53, 0.12);
+}
+
+#menu-buttons button:hover::before {
+    opacity: 1;
+}
+
+#menu-buttons button:hover::after {
+    color: var(--color-text);
+    right: 1rem;
+}
+
+/* Acessibilidade pelo teclado */
+
+#menu-buttons button:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 4px;
+}
+
+/* Rodapé decorativo */
+
+#main-menu::after {
+    content: "FAULTLINE  //  PROTOTYPE 0.1.0";
+
+    position: absolute;
+    bottom: 1.5rem;
+    left: 2rem;
+
+    color: rgba(232, 229, 226, 0.55);
+
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+}
+
+/* Telas menores */
+
+@media (max-width: 480px) {
+    #main-menu {
+        padding: 1.25rem;
+    }
+
+    #main-menu::before {
+        left: 1.25rem;
+        right: 1.25rem;
+        top: 1.25rem;
+    }
+
+    #main-menu h1 {
+        letter-spacing: 0.13em;
+    }
+
+    #menu-buttons {
+        width: min(100%, 300px);
+    }
+
+    #menu-buttons button {
+        min-height: 54px;
+        font-size: 0.8rem;
+    }
+
+    #main-menu::after {
+        left: 1.25rem;
+        bottom: 1rem;
+        font-size: 0.55rem;
+    }
+}
+
+/* Respeita a preferência por menos animações */
+
+@media (prefers-reduced-motion: reduce) {
+    #menu-buttons button,
+    #menu-buttons button::before,
+    #menu-buttons button::after {
+        transition: none;
+    }
+}
