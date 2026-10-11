@@ -2,6 +2,7 @@
 // FAULTLINE — CRIADOR DE PERSONAGENS
 // ========================================
 
+
 const form = document.getElementById("character-form");
 const nameInput = document.getElementById("character-name");
 const classInput = document.getElementById("character-class");
@@ -10,6 +11,21 @@ const pointsRemaining = document.getElementById("points-remaining");
 const pointsProgress = document.getElementById("points-progress");
 const feedback = document.getElementById("form-feedback");
 const saveButton = document.getElementById("save-character-button");
+const appearanceGallery = document.getElementById("appearance-gallery");
+const appearancePreview = document.getElementById("appearance-preview");
+const appearanceSelectedLabel = document.getElementById(
+    "appearance-selected-label"
+);
+
+const availableAppearances = [
+    {
+        id: "personagem-01",
+        name: "Personagem 01",
+        src: "src/assets/images/characters/personagem-01.png"
+    }
+];
+
+let selectedAppearance = availableAppearances[0].src;
 
 const TOTAL_POINTS = 20;
 const BASE_ATTRIBUTE = 5;
@@ -71,6 +87,11 @@ if (requestedId) {
         nameInput.value = existingCharacter.name;
         classInput.value = existingCharacter.characterClass;
         attributes = { ...existingCharacter.attributes };
+        selectedAppearance = availableAppearances.some(
+            appearance => appearance.src === existingCharacter.appearance
+            )
+        ? existingCharacter.appearance
+        : availableAppearances[0].src;
 
         document.getElementById("creator-heading").textContent =
             "Editar personagem";
@@ -78,6 +99,72 @@ if (requestedId) {
         saveButton.textContent = "Salvar alterações";
     }
 }
+
+function renderAppearanceGallery() {
+    appearanceGallery.replaceChildren();
+
+    for (const appearance of availableAppearances) {
+        const option = document.createElement("button");
+
+        option.type = "button";
+        option.className = "appearance-option";
+        option.dataset.appearance = appearance.src;
+        option.setAttribute("aria-label", appearance.name);
+        option.setAttribute(
+            "aria-pressed",
+            String(appearance.src === selectedAppearance)
+        );
+
+        if (appearance.src === selectedAppearance) {
+            option.classList.add("selected");
+        }
+
+        const image = document.createElement("img");
+        image.src = appearance.src;
+        image.alt = appearance.name;
+        image.loading = "lazy";
+
+        option.append(image);
+        appearanceGallery.append(option);
+    }
+
+    updateAppearancePreview();
+}
+
+function updateAppearancePreview() {
+    const appearance = availableAppearances.find(
+        item => item.src === selectedAppearance
+    );
+
+    if (!appearance) return;
+
+    appearancePreview.src = appearance.src;
+    appearancePreview.alt = `Retrato de ${appearance.name}`;
+    appearanceSelectedLabel.textContent =
+        `Selecionado: ${appearance.name}`;
+
+    const options = appearanceGallery.querySelectorAll(
+        ".appearance-option"
+    );
+
+    for (const option of options) {
+        const isSelected =
+            option.dataset.appearance === selectedAppearance;
+
+        option.classList.toggle("selected", isSelected);
+        option.setAttribute("aria-pressed", String(isSelected));
+    }
+}
+
+appearanceGallery.addEventListener("click", event => {
+    const option = event.target.closest(".appearance-option");
+
+    if (!option) return;
+
+    selectedAppearance = option.dataset.appearance;
+    updateAppearancePreview();
+});
+
 
 // Cria os controles de atributo usando os dados da configuração.
 function renderAttributeControls() {
@@ -300,7 +387,8 @@ form.addEventListener("submit", event => {
         name,
         classInput.value,
         { ...attributes },
-        editingId
+        editingId,
+        selectedAppearance
     );
 
     try {
@@ -321,3 +409,4 @@ form.addEventListener("submit", event => {
 renderAttributeControls();
 updateClassInformation();
 updatePreview();
+renderAppearanceGallery();

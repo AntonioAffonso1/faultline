@@ -36,11 +36,27 @@
                     <p class="panel-index">01 / IDENTIDADE</p>
                     <h2>Identificação</h2>
 
-                    <div class="portrait-placeholder">
-                        <span class="portrait-symbol" aria-hidden="true">?</span>
-                        <span>RETRATO INDISPONÍVEL</span>
-                        <small>A personalização visual será adicionada depois.</small>
+                <section class="appearance-selector">
+                    <h3>Aparência</h3>
+
+                    <div class="appearance-preview">
+                        <img
+                            id="appearance-preview"
+                            src="src/assets/images/characters/personagem-01.png"
+                            alt="Retrato do personagem selecionado"
+                        >
                     </div>
+
+                    <p id="appearance-selected-label" class="appearance-hint">
+                        Aparência selecionada
+                    </p>
+
+                    <div
+                        id="appearance-gallery"
+                        class="appearance-gallery"
+                        aria-label="Galeria de aparências"
+                    ></div>
+                </section>
 
                     <label for="character-name">Nome do personagem</label>
                     <input

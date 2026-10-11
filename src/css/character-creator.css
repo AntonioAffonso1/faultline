@@ -678,3 +678,176 @@ body {
     overflow: visible;
     padding-bottom: 2rem;
 }
+
+/* Seletor de aparência */
+.appearance-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.appearance-selector h3 {
+    margin: 0;
+    color: var(--color-text);
+}
+
+.appearance-preview {
+    width: 100%;
+    max-width: 240px;
+    aspect-ratio: 3 / 4;
+    margin-inline: auto;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-surface);
+}
+
+.appearance-preview img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.appearance-hint {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.appearance-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+}
+
+.appearance-option {
+    min-width: 0;
+    padding: 3px;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+}
+
+.appearance-option img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 3px;
+}
+
+.appearance-option:hover {
+    border-color: var(--color-text);
+}
+
+.appearance-option.selected {
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.appearance-option:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+}
+
+@media (max-width: 650px) {
+    .appearance-preview {
+        max-width: 180px;
+    }
+
+    .appearance-gallery {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+
+/* Mantém os três painéis com dimensões consistentes. */
+.creator-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 0.85fr)
+        minmax(0, 1fr)
+        minmax(0, 1.25fr);
+    align-items: stretch;
+    gap: 1rem;
+}
+
+.identity-panel,
+.class-panel,
+.attributes-panel {
+    min-width: 0;
+    height: 100%;
+    align-self: stretch;
+}
+
+/* Evita que a pré-visualização aumente demais a identidade. */
+.appearance-preview {
+    width: 100%;
+    max-width: 150px;
+    aspect-ratio: 3 / 4;
+    margin-inline: auto;
+}
+
+/* Galeria compacta para preservar o espaço vertical. */
+.appearance-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.4rem;
+    max-width: 100%;
+}
+
+.appearance-option {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    padding: 2px;
+}
+
+/* Reduz espaços desnecessários dentro da identidade. */
+.appearance-selector {
+    gap: 0.5rem;
+}
+
+.appearance-selector h3 {
+    margin-bottom: 0;
+}
+
+.appearance-hint {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+/* Mantém a organização em telas menores. */
+@media (max-width: 1000px) {
+    .creator-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+    }
+
+    .attributes-panel {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 650px) {
+    .creator-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .attributes-panel {
+        grid-column: auto;
+    }
+
+    .appearance-preview {
+        max-width: 130px;
+    }
+
+    .appearance-gallery {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
