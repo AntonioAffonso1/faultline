@@ -1,0 +1,680 @@
+/* ========================================
+   FAULTLINE — CRIAÇÃO DE PERSONAGEM
+   ======================================== */
+
+#creator-page {
+    position: relative;
+    isolation: isolate;
+
+    width: 100%;
+    min-height: 100vh;
+    padding: 1.5rem 5% 1rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    background: var(--color-background);
+}
+
+#creator-page::before,
+#creator-page::after {
+    content: "";
+    position: fixed;
+    inset: -8px;
+    pointer-events: none;
+}
+
+#creator-page::before {
+    z-index: -2;
+
+    background:
+        url("../assets/images/backgrounds/MenuBG.jpg")
+        center / cover no-repeat;
+
+    filter: blur(6px);
+    opacity: 0.30;
+}
+
+#creator-page::after {
+    z-index: -1;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(16, 16, 20, 0.91),
+            rgba(16, 16, 20, 0.76),
+            rgba(16, 16, 20, 0.91)
+        );
+}
+
+/* Cabeçalho */
+
+.creator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.back-link {
+    color: var(--color-muted);
+    font-size: 0.8rem;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: var(--color-text);
+}
+
+.archive-label {
+    color: var(--color-primary);
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 0.14em;
+}
+
+/* Título */
+
+.creator-title .eyebrow,
+.panel-index {
+    margin: 0 0 0.4rem;
+    color: var(--color-primary);
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+}
+
+.creator-title h1 {
+    margin: 0;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.creator-title > p:last-child {
+    margin: 0.45rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+}
+
+/* Formulário e colunas */
+
+#character-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.creator-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 0.9fr)
+        minmax(0, 1fr)
+        minmax(0, 1.2fr);
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.creator-panel {
+    min-width: 0;
+    padding: 1.15rem;
+
+    background: rgba(27, 27, 34, 0.83);
+    border: 1px solid rgba(70, 67, 74, 0.9);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.creator-panel h2 {
+    margin: 0 0 1rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.creator-panel h3 {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.info-label {
+    display: block;
+    margin-bottom: 0.4rem;
+
+    color: var(--color-muted);
+    font-size: 0.6rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+}
+
+/* Retrato */
+
+.portrait-placeholder {
+    min-height: 145px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.55rem;
+
+    text-align: center;
+    color: var(--color-muted);
+    background: rgba(16, 16, 20, 0.72);
+    border: 1px dashed var(--color-border);
+}
+
+.portrait-symbol {
+    color: var(--color-primary);
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.portrait-placeholder > span:not(.portrait-symbol) {
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+}
+
+.portrait-placeholder small {
+    font-size: 0.65rem;
+    line-height: 1.5;
+}
+
+/* Campos */
+
+.creator-panel label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.creator-panel input,
+.creator-panel select {
+    width: 100%;
+    min-height: 39px;
+    padding: 0.65rem 0.75rem;
+
+    color: var(--color-text);
+    background: #101014;
+    border: 1px solid var(--color-border);
+    border-radius: 0;
+    outline: none;
+
+    font-size: 0.8rem;
+}
+
+.creator-panel input:focus,
+.creator-panel select:focus {
+    border-color: var(--color-primary);
+}
+
+.field-hint {
+    margin: 0.45rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.68rem;
+    line-height: 1.5;
+}
+
+.identity-status {
+    margin-top: 1.1rem;
+    padding-top: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    color: var(--color-muted);
+    border-top: 1px solid var(--color-border);
+    font-size: 0.6rem;
+    letter-spacing: 0.07em;
+}
+
+.status-indicator {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    background: var(--color-primary);
+    border-radius: 50%;
+}
+
+/* Classe e passiva */
+
+.class-information,
+.passive-box,
+.combat-rules {
+    margin-top: 1rem;
+    padding: 0.9rem;
+
+    background: rgba(16, 16, 20, 0.55);
+    border-left: 2px solid var(--color-border);
+}
+
+.class-information {
+    border-left-color: var(--color-primary);
+}
+
+.class-information p,
+.passive-box p,
+.combat-rules p {
+    margin: 0.5rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    line-height: 1.6;
+}
+
+.passive-box {
+    border-left-color: var(--color-primary);
+}
+
+/* Pontos */
+
+.points-display {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+}
+
+.points-display strong {
+    color: var(--color-text);
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.points-total {
+    color: var(--color-muted);
+    font-size: 0.8rem;
+}
+
+.points-track {
+    height: 4px;
+    margin-top: 0.55rem;
+    overflow: hidden;
+    background: #101014;
+}
+
+#points-progress {
+    width: 0%;
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 0.2s ease;
+}
+
+/* Controles de atributos, gerados pelo JS */
+
+#attribute-controls {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.attribute-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.6rem;
+    align-items: center;
+}
+
+.attribute-info {
+    min-width: 0;
+}
+
+.attribute-name {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: bold;
+}
+
+.attribute-base {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--color-muted);
+    font-size: 0.62rem;
+}
+
+.attribute-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.attribute-value {
+    min-width: 1.6rem;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+}
+
+.attribute-button {
+    width: 29px;
+    height: 29px;
+    padding: 0;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    color: var(--color-text);
+    background: #101014;
+    border: 1px solid var(--color-border);
+
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.attribute-button:hover:not(:disabled) {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.attribute-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+#form-feedback {
+    min-height: 1rem;
+    margin: 0.7rem 0 0;
+    color: #e7a4a9;
+    font-size: 0.72rem;
+    line-height: 1.5;
+}
+
+/* Estatísticas finais */
+
+.stats-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stats-heading h2 {
+    margin-bottom: 0;
+}
+
+.calculation-status {
+    color: var(--color-muted);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.6rem;
+}
+
+.stat-card {
+    min-width: 0;
+    padding: 0.8rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    background: rgba(16, 16, 20, 0.75);
+    border: 1px solid rgba(70, 67, 74, 0.7);
+}
+
+.stat-card span {
+    color: var(--color-muted);
+    font-size: 0.57rem;
+    line-height: 1.4;
+}
+
+.stat-card strong {
+    font-size: 1.15rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.stats-note {
+    margin: 0.8rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.67rem;
+    line-height: 1.5;
+}
+
+/* Ações */
+
+.creator-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.primary-button,
+.secondary-button {
+    min-height: 39px;
+    padding: 0.7rem 1rem;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-decoration: none;
+
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.primary-button {
+    color: var(--color-text);
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.primary-button:hover {
+    background: #c03442;
+    border-color: #c03442;
+}
+
+.secondary-button {
+    color: var(--color-text);
+    background: transparent;
+}
+
+.secondary-button:hover {
+    border-color: var(--color-primary);
+}
+
+.creator-footer {
+    margin-top: auto;
+    padding-top: 0.75rem;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+    color: var(--color-muted);
+    border-top: 1px solid var(--color-border);
+
+    font-size: 0.6rem;
+    font-weight: bold;
+    letter-spacing: 0.12em;
+}
+
+/* Responsividade */
+
+@media (max-width: 1000px) {
+    .creator-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .attributes-panel {
+        grid-column: 1 / -1;
+    }
+
+    #attribute-controls {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 1.5rem;
+    }
+}
+
+@media (max-width: 650px) {
+    #creator-page {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .creator-header {
+        align-items: flex-start;
+    }
+
+    .archive-label {
+        text-align: right;
+        font-size: 0.55rem;
+    }
+
+    .creator-title h1 {
+        font-size: 1.8rem;
+    }
+
+    .creator-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .attributes-panel {
+        grid-column: auto;
+    }
+
+    #attribute-controls {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .stats-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .creator-actions {
+        flex-direction: column-reverse;
+    }
+
+    .creator-actions > * {
+        width: 100%;
+    }
+
+    .creator-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #points-progress,
+    .primary-button,
+    .secondary-button {
+        transition: none;
+    }
+}
+
+/* Permite que a página cresça conforme o conteúdo. */
+#creator-page {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    overflow: visible;
+
+    padding: clamp(1rem, 2.5vh, 2rem)
+             clamp(1rem, 3vw, 3rem);
+
+    gap: clamp(0.75rem, 1.5vh, 1.25rem);
+}
+
+/* Mantém os painéis proporcionais à largura disponível. */
+.creator-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 0.85fr)
+        minmax(0, 1fr)
+        minmax(0, 1.25fr);
+
+    align-items: start;
+    gap: 1rem;
+}
+
+.identity-panel,
+.class-panel,
+.attributes-panel,
+.stats-panel {
+    min-width: 0;
+}
+
+/* Evita que os campos ultrapassem seus painéis. */
+#character-name,
+#character-class {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Em telas menores, empilha os painéis. */
+@media (max-width: 1000px) {
+    .creator-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .attributes-panel {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 650px) {
+    #creator-page {
+        padding: 1rem;
+    }
+
+    .creator-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .attributes-panel {
+        grid-column: auto;
+    }
+}
+
+/* Apenas o documento controla a rolagem vertical. */
+html {
+    height: auto;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+}
+
+#app {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+}
+
+#creator-page {
+    height: auto;
+    min-height: 100vh;
+    max-height: none;
+    overflow: visible;
+    padding-bottom: 2rem;
+}

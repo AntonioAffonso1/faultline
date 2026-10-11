@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Criar ficha | Faultline</title>
+
+    <link rel="stylesheet" href="src/css/global.css">
+    <link rel="stylesheet" href="src/css/character-creator.css">
+</head>
+
+<body>
+    <main id="creator-page">
+
+        <header class="creator-header">
+            <a href="characters.html" class="back-link">
+                &larr; Voltar ao arquivo
+            </a>
+
+            <span class="archive-label">FAULTLINE / NOVO REGISTRO</span>
+        </header>
+
+        <section class="creator-title">
+            <p class="eyebrow">REGISTRO DE IDENTIDADE</p>
+            <h1 id="creator-heading">Criar personagem</h1>
+            <p>Defina sua identidade e prepare-se para enfrentar as anomalias.</p>
+        </section>
+
+        <form id="character-form">
+
+            <div class="creator-layout">
+
+                <!-- Coluna de identidade -->
+                <section class="creator-panel identity-panel">
+                    <p class="panel-index">01 / IDENTIDADE</p>
+                    <h2>Identificação</h2>
+
+                    <div class="portrait-placeholder">
+                        <span class="portrait-symbol" aria-hidden="true">?</span>
+                        <span>RETRATO INDISPONÍVEL</span>
+                        <small>A personalização visual será adicionada depois.</small>
+                    </div>
+
+                    <label for="character-name">Nome do personagem</label>
+                    <input
+                        id="character-name"
+                        name="characterName"
+                        type="text"
+                        maxlength="30"
+                        placeholder="Digite um nome..."
+                        autocomplete="off"
+                        required
+                    >
+
+                    <p class="field-hint">Máximo de 30 caracteres.</p>
+
+                    <div class="identity-status">
+                        <span class="status-indicator"></span>
+                        <span>REGISTRO EM PREPARAÇÃO</span>
+                    </div>
+                </section>
+
+                <!-- Coluna de classe -->
+                <section class="creator-panel class-panel">
+                    <p class="panel-index">02 / ESPECIALIZAÇÃO</p>
+                    <h2>Classe</h2>
+
+                    <label for="character-class">Selecione uma classe</label>
+
+                    <select id="character-class" name="characterClass">
+                        <option value="Combatente">Combatente</option>
+                        <option value="Defensor">Defensor</option>
+                        <option value="Anômalo">Anômalo</option>
+                    </select>
+
+                    <div class="class-information">
+                        <span class="info-label">DESCRIÇÃO</span>
+                        <h3 id="class-name">Combatente</h3>
+                        <p id="class-description"></p>
+                    </div>
+
+                    <div class="passive-box">
+                        <span class="info-label">PASSIVA DE CLASSE</span>
+                        <h3 id="passive-name"></h3>
+                        <p id="passive-description"></p>
+                    </div>
+
+                    <div class="combat-rules">
+                        <span class="info-label">AÇÕES DISPONÍVEIS</span>
+                        <p id="class-actions"></p>
+                    </div>
+                </section>
+
+                <!-- Coluna de atributos -->
+                <section class="creator-panel attributes-panel">
+                    <p class="panel-index">03 / DISTRIBUIÇÃO</p>
+                    <h2>Atributos</h2>
+
+                    <div class="points-display">
+                        <div>
+                            <span class="info-label">PONTOS RESTANTES</span>
+                            <strong id="points-remaining">20</strong>
+                        </div>
+
+                        <span class="points-total">/ 20</span>
+                    </div>
+
+                    <div class="points-track">
+                        <div id="points-progress"></div>
+                    </div>
+
+                    <p class="field-hint">
+                        Cada atributo começa em 5. Distribua os 20 pontos adicionais.
+                        O valor-base máximo é 20.
+                    </p>
+
+                    <div id="attribute-controls"></div>
+
+                    <p id="form-feedback" role="status" aria-live="polite"></p>
+                </section>
+
+            </div>
+
+            <!-- Resumo calculado -->
+            <section class="creator-panel stats-panel">
+                <div class="stats-heading">
+                    <div>
+                        <p class="panel-index">04 / RELATÓRIO</p>
+                        <h2>Estatísticas finais</h2>
+                    </div>
+
+                    <span class="calculation-status">PRÉVIA EM TEMPO REAL</span>
+                </div>
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <span>VIDA MÁXIMA</span>
+                        <strong id="preview-health">150</strong>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>ENERGIA</span>
+                        <strong id="preview-energy">100</strong>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>FORÇA EFETIVA</span>
+                        <strong id="preview-strength">7</strong>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>PODER EFETIVO</span>
+                        <strong id="preview-power">5</strong>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>RESISTÊNCIA EFETIVA</span>
+                        <strong id="preview-resistance">5</strong>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>DANO FÍSICO</span>
+                        <strong id="preview-damage">24</strong>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>PODER ESPECIAL</span>
+                        <strong id="preview-special">22</strong>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>REDUÇÃO DE DANO</span>
+                        <strong id="preview-reduction">10</strong>
+                    </div>
+
+                </div>
+
+                <p class="stats-note">
+                    Os valores são calculados a partir dos atributos e da passiva
+                    de classe. O balanceamento poderá ser ajustado durante o desenvolvimento.
+                </p>
+            </section>
+
+            <!-- Ações do formulário -->
+            <footer class="creator-actions">
+                <a href="characters.html" class="secondary-button">
+                    Cancelar
+                </a>
+
+                <button type="submit" id="save-character-button" class="primary-button">
+                    Confirmar personagem
+                </button>
+            </footer>
+
+        </form>
+
+        <footer class="creator-footer">
+            <span>FAULTLINE</span>
+            <span>ARQUIVO DE IDENTIDADES</span>
+        </footer>
+
+    </main>
+
+    <script src="src/js/characters/Character.js"></script>
+    <script src="src/js/characters/characterManager.js"></script>
+    <script src="src/js/pages/characterCreatorPage.js"></script>
+    <script src="src/js/pageTransition.js"></script>
+</body>
+</html>

@@ -37,8 +37,63 @@ body {
     overflow: hidden;
 }
 
+
+
 button,
 input,
 select {
     font: inherit;
+}
+
+
+/* ========================================
+   FAULTLINE — TRANSIÇÕES GLOBAIS
+   ======================================== */
+
+body {
+    animation: faultline-enter 0.45s ease-out both;
+}
+
+/* Entrada da página */
+@keyframes faultline-enter {
+    from {
+        opacity: 0;
+        filter: brightness(0.45);
+        transform: translateX(8px);
+    }
+
+    to {
+        opacity: 1;
+        filter: brightness(1);
+        transform: translateX(0);
+    }
+}
+
+/* Camada escura durante a saída */
+#page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+
+    background: #101014;
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+}
+
+#page-transition.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Acessibilidade: respeita preferência por menos movimento */
+@media (prefers-reduced-motion: reduce) {
+    body {
+        animation: none;
+    }
+
+    #page-transition {
+        transition: none;
+    }
 }
