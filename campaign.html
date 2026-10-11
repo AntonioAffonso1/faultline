@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Faultline | Campanha</title>
+
+    <link rel="stylesheet" href="src/css/global.css">
+    <link rel="stylesheet" href="src/css/campaign.css">
+</head>
+
+<body>
+    <main id="campaign-page">
+
+        <header class="campaign-header">
+            <a href="index.html" class="campaign-back-link">
+                ← Voltar ao menu
+            </a>
+
+            <div class="campaign-brand">
+                <span class="campaign-eyebrow">FAULTLINE</span>
+                <h1>Campanha</h1>
+            </div>
+
+            <div class="campaign-status">
+                <span class="status-indicator"></span>
+                <span>REGISTRO DE OPERAÇÕES</span>
+            </div>
+        </header>
+
+        <section class="campaign-intro">
+            <div>
+                <p class="section-label">ARQUIVO DE CAMPO / 001</p>
+                <h2>Escolha seu destino.</h2>
+                <p class="campaign-description">
+                    Três áreas foram identificadas.
+                </p>
+            </div>
+
+            <div class="campaign-counter">
+                <span>OPERAÇÕES DISPONÍVEIS</span>
+                <strong>03</strong>
+            </div>
+        </section>
+
+        <section class="campaign-map" aria-label="Mapa da campanha">
+
+            <div class="map-overlay" aria-hidden="true"></div>
+
+            <div class="map-coordinates coordinates-top">
+                SETOR URBANO // ACESSO RESTRITO
+            </div>
+
+            <div class="map-grid" aria-hidden="true"></div>
+
+            <div class="level-marker marker-one">
+                <span class="marker-line"></span>
+
+                <button
+                    type="button"
+                    class="level-button"
+                    id="level-1"
+                    aria-label="Selecionar nível 1"
+                >
+                    <span class="level-number">01</span>
+                </button>
+
+                <div class="level-info">
+                    <span class="level-status">01 / INÍCIO</span>
+                    <h3>Zona Industrial</h3>
+                    <p>Local abandonado</p>
+                </div>
+            </div>
+
+            <div class="level-marker marker-two">
+                <span class="marker-line"></span>
+
+                <button
+                    type="button"
+                    class="level-button"
+                    id="level-2"
+                    aria-label="Selecionar nível 2"
+                >
+                    <span class="level-number">02</span>
+                </button>
+
+                <div class="level-info">
+                    <span class="level-status">02 / INVESTIGAÇÃO</span>
+                    <h3>Zona Morta</h3>
+                    <p>???</p>
+                </div>
+            </div>
+
+            <div class="level-marker marker-three">
+                <span class="marker-line"></span>
+
+                <button
+                    type="button"
+                    class="level-button"
+                    id="level-3"
+                    aria-label="Selecionar nível 3"
+                >
+                    <span class="level-number">03</span>
+                </button>
+
+                <div class="level-info">
+                    <span class="level-status">03 / CONFRONTO</span>
+                    <h3>Falha Terminal</h3>
+                    <p>???</p>
+                </div>
+            </div>
+
+            <div class="map-coordinates coordinates-bottom">
+                COORDENADAS INCOMPLETAS
+                <span>REALIDADE: INSTÁVEL</span>
+            </div>
+
+            <div class="map-legend">
+                <span class="legend-symbol"></span>
+                PONTO DE OPERAÇÃO
+            </div>
+
+        </section>
+
+        <footer class="campaign-footer">
+            <span>FAULTLINE // SISTEMA DE CAMPANHA</span>
+            <span>3 OPERAÇÕES REGISTRADAS</span>
+        </footer>
+
+    </main>
+
+    <script src="src/js/pages/campaignPage.js"></script>
+    <script src="src/js/pageTransition.js"></script>
+</body>
+</html>
