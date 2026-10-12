@@ -1,11 +1,19 @@
 class Character {
-    constructor(name, characterClass, attributes, id = null, appearance = null) {
+    constructor(
+        name,
+        characterClass,
+        attributes,
+        id = null,
+        appearance = null,
+        skills = []
+    ) {
         this.id = id ?? `${Date.now()}-${Math.random()}`;
         this.name = name;
         this.characterClass = characterClass;
         this.attributes = { ...attributes };
         this.energy = 100;
         this.appearance = appearance;
+        this.skills = [...skills];
 }
 
 
@@ -55,7 +63,8 @@ class Character {
             characterClass: this.characterClass,
             attributes: this.attributes,
             energy: this.energy,
-            appearance: this.appearance
+            appearance: this.appearance,
+            skills: [...this.skills]
         };
     }
 }

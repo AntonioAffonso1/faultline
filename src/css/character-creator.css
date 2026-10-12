@@ -851,3 +851,214 @@ body {
         grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 }
+
+
+/* =========================
+   HABILIDADES
+========================= */
+
+.skills-section {
+    width: 100%;
+    min-width: 0;
+    padding: clamp(0.8rem, 2vw, 1.4rem);
+    background: rgba(27, 27, 34, 0.96);
+    border: 1px solid var(--color-border);
+    border-top: 2px solid var(--color-primary);
+}
+
+.skills-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.skills-eyebrow {
+    color: var(--color-primary);
+    font-size: 0.68rem;
+    font-weight: bold;
+    letter-spacing: 0.16em;
+}
+
+.skills-heading h2 {
+    margin: 0.35rem 0;
+    color: var(--color-text);
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+}
+
+.skills-heading p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+}
+
+.skills-counter {
+    flex-shrink: 0;
+    color: var(--color-primary);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.skills-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 1rem;
+}
+
+.skills-equipped-panel,
+.skills-available-panel {
+    min-width: 0;
+    padding: 0.9rem;
+    background: rgba(16, 16, 20, 0.72);
+    border: 1px solid rgba(70, 67, 74, 0.8);
+}
+
+.skills-equipped-panel h3,
+.skills-available-panel h3 {
+    margin: 0 0 0.8rem;
+    color: var(--color-text);
+    font-size: 0.95rem;
+}
+
+/* Três espaços equipados */
+
+.equipped-skills {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.equipped-skill,
+.empty-skill-slot {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    min-height: 78px;
+    padding: 0.65rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+}
+
+.empty-skill-slot {
+    color: var(--color-muted);
+    border-style: dashed;
+    font-size: 0.82rem;
+}
+
+.skill-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+    background: #101014;
+    border: 1px solid rgba(166, 41, 53, 0.55);
+}
+
+.skill-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.skill-card-info h4 {
+    margin: 0 0 0.3rem;
+    color: var(--color-text);
+    font-size: 0.9rem;
+}
+
+.skill-card-info p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.76rem;
+    line-height: 1.4;
+}
+
+.skill-cost {
+    display: inline-block;
+    margin-top: 0.35rem;
+    color: var(--color-primary);
+    font-size: 0.72rem;
+    font-weight: bold;
+}
+
+.skill-remove,
+.skill-select {
+    flex-shrink: 0;
+    padding: 0.45rem 0.6rem;
+    color: var(--color-text);
+    background: #25232a;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.skill-remove:hover,
+.skill-select:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.skill-select:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Lista rolável de habilidades disponíveis */
+
+.available-skills {
+    display: grid;
+    gap: 0.65rem;
+    max-height: 330px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 0.35rem;
+    scrollbar-color: var(--color-primary) var(--color-background);
+    scrollbar-width: thin;
+}
+
+.available-skill {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    padding: 0.65rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+}
+
+.available-skill:hover {
+    border-color: var(--color-primary);
+}
+
+.available-skill .skill-icon {
+    width: 64px;
+    height: 64px;
+}
+
+.skill-restriction {
+    display: block;
+    margin-top: 0.3rem;
+    color: var(--color-primary);
+    font-size: 0.7rem;
+}
+
+@media (max-width: 700px) {
+    .skills-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .available-skills {
+        max-height: 260px;
+    }
+
+    .skill-icon,
+    .available-skill .skill-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .equipped-skill {
+        flex-wrap: wrap;
+    }
+}

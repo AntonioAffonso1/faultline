@@ -74,6 +74,46 @@ let attributes = {
 
 let editingId = null;
 
+const skillDefinitions = [
+    {
+        id: "percepcao",
+        name: "Percepção",
+        icon: "percepcao.png",
+        description: "Visualiza o próximo ataque do inimigo.",
+        cost: 15,
+        restriction: null
+    },
+    {
+        id: "estocada-corrompida",
+        name: "Estocada Corrompida",
+        icon: "estocada-corrompida.png",
+        description:
+            "Ataque imbuído com corrupção que causa Confusão, impedindo o inimigo de agir por 1 turno.",
+        cost: 25,
+        restriction: null
+    },
+    {
+        id: "condenacao",
+        name: "Condenação",
+        icon: "condenacao.png",
+        description:
+            "Aplica Culpa: causa 5 de dano por turno e reduz o dano do inimigo em 25%.",
+        cost: 45,
+        restriction: null
+    },
+    {
+        id: "bencao-abissal",
+        name: "Benção Abissal",
+        icon: "bencao-abissal.png",
+        description:
+            "Recupera 15 PV de toda a equipe e aumenta o dano crítico em 15%.",
+        cost: 50,
+        restriction: "Anômalo"
+    }
+];
+
+let selectedSkills = [];
+
 // Verifica se a URL possui um ID para edição.
 const params = new URLSearchParams(window.location.search);
 const requestedId = params.get("id");
@@ -87,6 +127,19 @@ if (requestedId) {
         nameInput.value = existingCharacter.name;
         classInput.value = existingCharacter.characterClass;
         attributes = { ...existingCharacter.attributes };
+        
+        selectedSkills = (existingCharacter.skills ?? [])
+            .filter(skillId => {
+                const skill = skillDefinitions.find(
+                    item => item.id === skillId
+                );
+
+                return skill &&
+                    (!skill.restriction ||
+                     skill.restriction === existingCharacter.characterClass);
+            })
+            .slice(0, 3);
+
         selectedAppearance = availableAppearances.some(
             appearance => appearance.src === existingCharacter.appearance
             )
@@ -388,7 +441,8 @@ form.addEventListener("submit", event => {
         classInput.value,
         { ...attributes },
         editingId,
-        selectedAppearance
+        selectedAppearance,
+        [...selectedSkills]
     );
 
     try {
@@ -405,8 +459,154 @@ form.addEventListener("submit", event => {
     }
 });
 
+const equippedSkillsElement = document.getElementById("equipped-skills");
+const availableSkillsElement = document.getElementById("available-skills");
+const skillsCounterElement = document.getElementById("skills-counter");
+
+function getSelectedClass() {
+    return document.getElementById("character-class")?.value
+        ?? document.querySelector('[name="character-class"]:checked')?.value
+        ?? "";
+}
+
+function renderSkills() {
+    equippedSkillsElement.replaceChildren();
+    availableSkillsElement.replaceChildren();
+
+    for (let slot = 0; slot < 3; slot++) {
+        const skillId = selectedSkills[slot];
+        const skill = skillDefinitions.find(item => item.id === skillId);
+
+        if (!skill) {
+            const emptySlot = document.createElement("div");
+            emptySlot.className = "empty-skill-slot";
+            emptySlot.textContent = `Espaço ${slot + 1} — vazio`;
+            equippedSkillsElement.append(emptySlot);
+            continue;
+        }
+
+        const card = document.createElement("article");
+        card.className = "equipped-skill";
+
+        const image = document.createElement("img");
+        image.className = "skill-icon";
+        image.src = `src/assets/images/icons/skills/${skill.icon}`;
+        image.alt = "";
+
+        const info = document.createElement("div");
+        info.className = "skill-card-info";
+
+        const title = document.createElement("h4");
+        title.textContent = skill.name;
+
+        const description = document.createElement("p");
+        description.textContent = skill.description;
+
+        const cost = document.createElement("span");
+        cost.className = "skill-cost";
+        cost.textContent = `Custo: ${skill.cost} de energia`;
+
+        info.append(title, description, cost);
+        card.append(image, info);
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "skill-remove";
+        removeButton.textContent = "Remover";
+        removeButton.setAttribute("aria-label", `Remover ${skill.name}`);
+
+        removeButton.addEventListener("click", () => {
+            selectedSkills = selectedSkills.filter(id => id !== skill.id);
+            renderSkills();
+        });
+
+        card.append(removeButton);
+        equippedSkillsElement.append(card);
+    }
+
+    for (const skill of skillDefinitions) {
+        const isEquipped = selectedSkills.includes(skill.id);
+        const isRestricted =
+            skill.restriction !== null &&
+            getSelectedClass() !== skill.restriction;
+
+        const card = document.createElement("article");
+        card.className = "available-skill";
+
+        const image = document.createElement("img");
+        image.className = "skill-icon";
+        image.src = `src/assets/images/icons/skills/${skill.icon}`;
+        image.alt = "";
+
+        const info = document.createElement("div");
+        info.className = "skill-card-info";
+
+        const title = document.createElement("h4");
+        title.textContent = skill.name;
+
+        const description = document.createElement("p");
+        description.textContent = skill.description;
+
+        const cost = document.createElement("span");
+        cost.className = "skill-cost";
+        cost.textContent = `Custo: ${skill.cost} de energia`;
+
+        info.append(title, description, cost);
+
+        if (isRestricted) {
+            const restriction = document.createElement("span");
+            restriction.className = "skill-restriction";
+            restriction.textContent = "Exclusiva da classe Anômalo";
+            info.append(restriction);
+        }
+
+        const selectButton = document.createElement("button");
+        selectButton.type = "button";
+        selectButton.className = "skill-select";
+        selectButton.textContent = isEquipped ? "Equipado" : "Equipar";
+        selectButton.disabled =
+            isEquipped || isRestricted || selectedSkills.length >= 3;
+
+        selectButton.addEventListener("click", () => {
+            if (
+                selectedSkills.length >= 3 ||
+                selectedSkills.includes(skill.id) ||
+                (skill.restriction && getSelectedClass() !== skill.restriction)
+            ) {
+                return;
+            }
+
+            selectedSkills.push(skill.id);
+            renderSkills();
+        });
+
+        card.append(image, info, selectButton);
+        availableSkillsElement.append(card);
+    }
+
+    skillsCounterElement.textContent = `${selectedSkills.length} / 3`;
+}
+
+const classSelector =
+    document.getElementById("character-class")
+    ?? document.querySelector('[name="character-class"]');
+
+classSelector?.addEventListener("change", () => {
+    const selectedClass = getSelectedClass();
+
+    selectedSkills = selectedSkills.filter(skillId => {
+        const skill = skillDefinitions.find(item => item.id === skillId);
+        return !skill?.restriction || skill.restriction === selectedClass;
+    });
+
+    renderSkills();
+});
+
+
+
 // Inicialização da tela.
 renderAttributeControls();
 updateClassInformation();
 updatePreview();
 renderAppearanceGallery();
+renderSkills();
