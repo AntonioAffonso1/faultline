@@ -4,33 +4,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faultline | Operação</title>
+    <title>Faultline | Combate</title>
 
     <link rel="stylesheet" href="src/css/global.css">
     <link rel="stylesheet" href="src/css/level.css">
 </head>
 <body>
-    <main id="level-page">
-        <p class="section-label">FAULTLINE // OPERAÇÃO AUTORIZADA</p>
-        <h1 id="level-title">Carregando operação...</h1>
+    <main id="battle-page">
+        <div class="battle-background" aria-hidden="true"></div>
+        <div class="battle-vignette" aria-hidden="true"></div>
 
-        <p id="level-description"></p>
+        <!-- HUD superior -->
+        <header class="battle-topbar">
+            <a href="campaign.html" class="battle-exit" aria-label="Sair do combate">
+                ← Sair
+            </a>
 
-        <h2>Equipe confirmada</h2>
-        <div id="confirmed-team"></div>
+            <div class="battle-mission">
+                <span>FAULTLINE // OPERAÇÃO</span>
+                <strong id="battle-level-name">O Despertar</strong>
+            </div>
 
-        <p class="level-notice">
-            Esta fase ainda está em desenvolvimento.
-            A equipe foi confirmada e está pronta para a implementação do combate.
-        </p>
+            <div class="turn-panel">
+                <img src="src/assets/images/icons/hud/Turn_icon.png" alt="">
+                <div>
+                    <span>TURNO ATUAL</span>
+                    <strong id="turn-counter">01</strong>
+                </div>
+            </div>
+        </header>
 
-        <a href="campaign.html" class="level-back-link">
-            Voltar ao mapa da campanha
-        </a>
+        <!-- Anúncio do turno -->
+        <div id="turn-announcement" class="turn-announcement" aria-live="assertive">
+            <span>NOVA FASE DE COMBATE</span>
+            <strong id="turn-announcement-text">TURNO 01</strong>
+        </div>
+
+        <!-- Arena -->
+        <section class="battle-arena" aria-label="Arena de combate">
+            <div class="arena-label arena-label-left">UNIDADE ALIADA</div>
+            <div class="arena-label arena-label-right">ALVO DE TREINAMENTO</div>
+
+            <div id="active-character" class="battle-character">
+                <div class="character-placeholder">
+                    <span id="battle-character-initial">?</span>
+                </div>
+                <div class="battle-character-info">
+                    <strong id="battle-character-name">Personagem</strong>
+                    <span id="battle-character-class">Classe</span>
+                    <div class="bar-track">
+                        <div id="health-bar" class="bar-fill health-fill"></div>
+                    </div>
+                    <span id="health-text">PV 100 / 100</span>
+                    <div class="bar-track energy-track">
+                        <div id="energy-bar" class="bar-fill energy-fill"></div>
+                    </div>
+                    <span id="energy-text">Energia 100 / 100</span>
+                </div>
+            </div>
+
+            <div id="training-target" class="training-target">
+                <div class="target-symbol">?</div>
+                <strong>Alvo de treinamento</strong>
+                <span>Sem inimigos implementados</span>
+                <div id="target-feedback" class="target-feedback"></div>
+            </div>
+
+            <div id="damage-number" class="damage-number" aria-live="polite"></div>
+        </section>
+
+        <!-- Equipe -->
+        <section class="battle-party-panel">
+            <span class="panel-eyebrow">EQUIPE DE OPERAÇÃO</span>
+            <div id="battle-party" class="battle-party"></div>
+        </section>
+
+        <!-- Painel de habilidades -->
+        <section id="skill-panel" class="skill-panel" hidden>
+            <div class="skill-panel-heading">
+                <div>
+                    <span class="panel-eyebrow">AÇÕES ESPECIAIS</span>
+                    <h2>Habilidades</h2>
+                </div>
+                <button id="close-skill-panel" type="button" aria-label="Fechar habilidades">×</button>
+            </div>
+            <div id="battle-skills" class="battle-skills"></div>
+        </section>
+
+        <!-- Ações -->
+        <footer class="battle-controls">
+            <div class="action-group">
+                <button type="button" class="action-button" id="attack-button">
+                    <img src="src/assets/images/icons/hud/Attack_Icon.png" alt="">
+                    <span>Ataque</span>
+                </button>
+
+                <button type="button" class="action-button" id="skill-button">
+                    <img src="src/assets/images/icons/hud/Skill_Icon.png" alt="">
+                    <span>Habilidades</span>
+                </button>
+
+                <button type="button" class="action-button" id="defend-button">
+                    <img src="src/assets/images/icons/hud/Defend_Icon.png" alt="">
+                    <span>Defender</span>
+                </button>
+            </div>
+
+            <div class="action-status">
+                <span id="action-status">Selecione uma ação.</span>
+                <button type="button" id="confirm-action-button" disabled>
+                    <img src="src/assets/images/icons/hud/Confirm_Icon.png" alt="">
+                    <span>Confirmar</span>
+                </button>
+            </div>
+        </footer>
+
+        <!-- Registro de combate -->
+        <aside class="battle-log" aria-label="Registro de combate">
+            <span class="panel-eyebrow">REGISTRO</span>
+            <div id="battle-log-content" aria-live="polite">
+                <p>Operação iniciada.</p>
+            </div>
+        </aside>
     </main>
 
     <script src="src/js/characters/Character.js"></script>
     <script src="src/js/characters/characterManager.js"></script>
     <script src="src/js/pages/levelPage.js"></script>
+    <script src="src/js/pageTransition.js"></script>
 </body>
 </html>
