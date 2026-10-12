@@ -459,3 +459,75 @@
         width: 100%;
     }
 }
+
+
+/* Informações do personagem */
+.roster-info,
+.slot-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.roster-info h3,
+.slot-info h3 {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+/* Retrato ao lado do nome e da classe */
+.roster-card .character-portrait {
+    width: 64px;
+    height: 76px;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.team-slot.filled .character-portrait {
+    width: 54px;
+    height: 64px;
+}
+
+/* Ícones pequenos das habilidades */
+.character-skills {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.3rem;
+    min-height: 24px;
+}
+
+.skill-mini-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    background: var(--color-background);
+    border: 1px solid var(--color-primary);
+    border-radius: 3px;
+}
+
+.no-skills {
+    color: var(--color-muted);
+    font-size: 0.68rem;
+}
+
+@media (max-width: 520px) {
+    .roster-card .character-portrait {
+        width: 48px;
+        height: 58px;
+    }
+
+    .team-slot.filled .character-portrait {
+        width: 42px;
+        height: 50px;
+    }
+
+    .skill-mini-icon {
+        width: 20px;
+        height: 20px;
+    }
+}

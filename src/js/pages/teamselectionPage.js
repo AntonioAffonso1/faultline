@@ -1,12 +1,12 @@
 
 const missionParams = new URLSearchParams(window.location.search);
-
 const requestedLevel = Number(missionParams.get("level"));
+
 const selectedLevel = [1, 2, 3].includes(requestedLevel)
     ? requestedLevel
     : 1;
 
-const missionDefinitions = {
+const missions = {
     1: {
         title: "O Despertar",
         description: "Primeiro contato com a ruptura."
@@ -21,7 +21,27 @@ const missionDefinitions = {
     }
 };
 
-const mission = missionDefinitions[selectedLevel];
+const skillIcons = {
+    "percepcao": {
+        name: "Percepção",
+        icon: "percepcao.png"
+    },
+    "estocada-corrompida": {
+        name: "Estocada Corrompida",
+        icon: "estocada-corrimpida.png"
+    },
+    "condenacao": {
+        name: "Condenação",
+        icon: "condenacao.png"
+    },
+    "bencao-abissal": {
+        name: "Benção Abissal",
+        icon: "bencao-abissal.png"
+    }
+};
+
+const selectedCharacters = [];
+const MAX_TEAM_SIZE = 3;
 
 const teamSlotsElement = document.getElementById("team-slots");
 const rosterElement = document.getElementById("character-roster");
@@ -29,14 +49,23 @@ const teamCountElement = document.getElementById("team-count");
 const feedbackElement = document.getElementById("team-feedback");
 const confirmButton = document.getElementById("confirm-team-button");
 
-const selectedCharacters = [];
-const MAX_TEAM_SIZE = 3;
+const mission = missions[selectedLevel];
 
 document.getElementById("mission-title").textContent = mission.title;
 document.getElementById("mission-description").textContent =
     mission.description;
 
 function getSavedCharacters() {
+    if (
+        typeof CharacterManager === "undefined" ||
+        typeof CharacterManager.getAll !== "function"
+    ) {
+        console.error(
+            "CharacterManager.getAll() não está disponível. Verifique os scripts."
+        );
+        return [];
+    }
+
     return CharacterManager.getAll() ?? [];
 }
 
@@ -59,6 +88,47 @@ function createPortrait(character) {
     });
 
     return image;
+}
+
+function createSkillIcons(character) {
+    const container = document.createElement("div");
+    container.className = "character-skills";
+    container.setAttribute("aria-label", "Habilidades equipadas");
+
+    const skills = Array.isArray(character.skills)
+        ? character.skills
+        : [];
+
+    if (skills.length === 0) {
+        const empty = document.createElement("span");
+        empty.className = "no-skills";
+        empty.textContent = "Sem habilidades";
+        container.append(empty);
+        return container;
+    }
+
+    for (const skillId of skills.slice(0, 3)) {
+        const skill = skillIcons[skillId];
+
+        if (!skill) {
+            continue;
+        }
+
+        const image = document.createElement("img");
+        image.className = "skill-mini-icon";
+        image.src = `src/assets/images/icons/skills/${skill.icon}`;
+        image.alt = skill.name;
+        image.title = skill.name;
+        image.loading = "lazy";
+
+        image.addEventListener("error", () => {
+            image.remove();
+        });
+
+        container.append(image);
+    }
+
+    return container;
 }
 
 function renderTeamSlots() {
@@ -93,7 +163,7 @@ function renderTeamSlots() {
         const characterClass = document.createElement("p");
         characterClass.textContent = character.characterClass;
 
-        info.append(name, characterClass);
+        info.append(name, characterClass, createSkillIcons(character));
 
         const removeButton = document.createElement("button");
         removeButton.type = "button";
@@ -124,31 +194,28 @@ function renderRoster() {
     const characters = getSavedCharacters();
 
     if (characters.length === 0) {
-        const emptyMessage = document.createElement("div");
-        emptyMessage.className = "empty-roster";
-        emptyMessage.textContent =
-            "Nenhuma ficha encontrada. Crie um personagem antes de iniciar uma missão.";
+        const empty = document.createElement("div");
+        empty.className = "empty-roster";
+        empty.textContent =
+            "Nenhuma ficha foi encontrada. Crie uma ficha antes de iniciar a missão.";
 
-        const createLink = document.createElement("a");
-        createLink.className = "manage-link";
-        createLink.href = "character-creator.html";
-        createLink.textContent = "Criar ficha →";
+        const link = document.createElement("a");
+        link.href = "characters.html";
+        link.className = "manage-link";
+        link.textContent = "Abrir fichas de personagens →";
 
-        emptyMessage.append(
-            document.createElement("br"),
-            createLink
-        );
-
-        rosterElement.append(emptyMessage);
+        empty.append(document.createElement("br"), link);
+        rosterElement.append(empty);
         return;
     }
 
     for (const character of characters) {
         const isSelected = selectedCharacters.includes(character.id);
-        const teamIsFull = selectedCharacters.length >= MAX_TEAM_SIZE;
+        const isFull = selectedCharacters.length >= MAX_TEAM_SIZE;
 
         const card = document.createElement("article");
-        card.className = `roster-card${isSelected ? " selected" : ""}`;
+        card.className =
+            `roster-card${isSelected ? " selected" : ""}`;
 
         card.append(createPortrait(character));
 
@@ -161,28 +228,23 @@ function renderRoster() {
         const characterClass = document.createElement("p");
         characterClass.textContent = character.characterClass;
 
-        const stats = document.createElement("p");
-        const attributes = character.attributes ?? {};
-        stats.textContent =
-            `VIT ${attributes.vitality ?? 0} · FOR ${attributes.strength ?? 0}`;
+        info.append(name, characterClass, createSkillIcons(character));
 
-        info.append(name, characterClass, stats);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "roster-action";
+        button.textContent = isSelected ? "Selecionado" : "Adicionar";
+        button.disabled = !isSelected && isFull;
 
-        const action = document.createElement("button");
-        action.type = "button";
-        action.className = "roster-action";
-        action.textContent = isSelected ? "Selecionado" : "Adicionar";
-        action.disabled = !isSelected && teamIsFull;
-
-        action.addEventListener("click", () => {
-            if (isSelected) {
+        button.addEventListener("click", () => {
+            if (selectedCharacters.includes(character.id)) {
                 removeCharacter(character.id);
             } else {
                 addCharacter(character.id);
             }
         });
 
-        card.append(info, action);
+        card.append(info, button);
         rosterElement.append(card);
     }
 }
@@ -204,13 +266,12 @@ function addCharacter(characterId) {
 
     if (!exists) {
         feedbackElement.textContent =
-            "Esta ficha não foi encontrada. Atualize a lista.";
+            "A ficha não foi encontrada. Atualize a página e tente novamente.";
         return;
     }
 
     selectedCharacters.push(characterId);
     feedbackElement.textContent = "";
-
     renderAll();
 }
 
@@ -237,7 +298,6 @@ confirmButton.addEventListener("click", () => {
         return;
     }
 
-    // Confere novamente se todas as fichas continuam existindo.
     const savedCharacters = getSavedCharacters();
 
     const validTeam = selectedCharacters.filter(id =>
@@ -246,7 +306,7 @@ confirmButton.addEventListener("click", () => {
 
     if (validTeam.length !== selectedCharacters.length) {
         feedbackElement.textContent =
-            "Uma das fichas não está mais disponível. Revise a equipe.";
+            "Uma ficha não está mais disponível. Revise a equipe.";
         return;
     }
 
@@ -261,7 +321,6 @@ confirmButton.addEventListener("click", () => {
         JSON.stringify(pendingMission)
     );
 
-    // A fase só é aberta após a confirmação.
     window.location.href = `level.html?level=${selectedLevel}`;
 });
 
