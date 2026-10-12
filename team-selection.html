@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faultline | Seleção de equipe</title>
+
+    <link rel="stylesheet" href="src/css/global.css">
+    <link rel="stylesheet" href="src/css/team-selection.css">
+</head>
+<body>
+    <main id="team-page">
+        <header class="team-header">
+            <a href="campaign.html" class="team-back-link">
+                ← Voltar ao mapa
+            </a>
+
+            <div class="team-brand">
+                <span>FAULTLINE // PREPARAÇÃO</span>
+                <h1>Formação da equipe</h1>
+            </div>
+
+            <div class="mission-tag">
+                <span class="status-indicator"></span>
+                <span>PROTOCOLO DE MISSÃO</span>
+            </div>
+        </header>
+
+        <section class="mission-intro">
+            <div>
+                <p class="section-label">ANTES DA OPERAÇÃO</p>
+                <h2 id="mission-title">Preparar equipe</h2>
+                <p id="mission-description">
+                    Selecione os personagens que participarão desta operação.
+                </p>
+            </div>
+
+            <div class="team-counter">
+                <span>MEMBROS SELECIONADOS</span>
+                <strong id="team-count">0 / 3</strong>
+            </div>
+        </section>
+
+        <section class="team-slots-section">
+            <div class="section-heading">
+                <h2>Equipe selecionada</h2>
+                <span>ATÉ 3 PERSONAGENS</span>
+            </div>
+
+            <div id="team-slots" class="team-slots"></div>
+        </section>
+
+        <section class="roster-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Fichas disponíveis</h2>
+                    <p>Selecione os personagens que deseja levar.</p>
+                </div>
+
+                <a href="characters.html" class="manage-link">
+                    Gerenciar fichas ↗
+                </a>
+            </div>
+
+            <div id="team-feedback"
+                 class="team-feedback"
+                 role="status"
+                 aria-live="polite"></div>
+
+            <div id="character-roster" class="character-roster"></div>
+        </section>
+
+        <footer class="team-footer">
+            <span>FAULTLINE // REGISTRO DE OPERAÇÕES</span>
+
+            <button id="confirm-team-button"
+                    class="confirm-team-button"
+                    type="button"
+                    disabled>
+                Confirmar equipe e iniciar
+                <span aria-hidden="true">→</span>
+            </button>
+        </footer>
+    </main>
+
+    <script src="src/js/characters/Character.js"></script>
+    <script src="src/js/characters/characterManager.js"></script>
+    <script src="src/js/pages/teamSelectionPage.js"></script>
+    <script src="src/js/pageTransition.js"></script>
+</body>
+</html>
