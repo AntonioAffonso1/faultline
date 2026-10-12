@@ -26,6 +26,17 @@ if (!validMission) {
     initializeBattle();
 }
 
+function resolveImagePath(path, fallback) {
+    if (!path) return fallback;
+
+    // Corrige caminhos antigos salvos nas fichas.
+    const normalizedPath = path
+        .replace(/^assets\/images\//, "src/assets/images/")
+        .replace(/^images\//, "src/assets/images/");
+
+    return normalizedPath;
+}
+
 function initializeBattle() {
     const allCharacters = CharacterManager.getAll() ?? [];
 
@@ -60,7 +71,7 @@ function initializeBattle() {
         },
         "estocada-corrompida": {
             name: "Estocada Corrompida",
-            icon: "estocada-corrimpida.png",
+            icon: "estocada-corrompida.png",
             description: "Ataque corrompido que causa Confusão por 1 turno.",
             cost: 25
         },
@@ -187,8 +198,13 @@ function initializeBattle() {
 
             const image = document.createElement("img");
             image.src = character.appearance ||
-                "../../src/assets/images/characters/personagem-01.png";
+                "src/assets/images/characters/personagem-01.png";
             image.alt = "";
+            
+            image.src = resolveImagePath(
+                character.appearance,
+                "src/assets/images/characters/personagem-01.png"
+            );
 
             image.addEventListener("error", () => {
                 image.onerror = null;
@@ -273,7 +289,7 @@ function initializeBattle() {
             card.className = "battle-skill";
 
             const image = document.createElement("img");
-            image.src = `images/ícons/skills/${skill.icon}`;
+            image.src = `src/assets/images/icons/skills/${skill.icon}`;
             image.alt = "";
 
             image.addEventListener("error", () => {

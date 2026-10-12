@@ -747,3 +747,79 @@
         animation-duration: .01ms;
     }
 }
+
+
+/* Botões de ação da HUD: somente ícone e texto */
+.battle-action,
+.action-button,
+#confirm-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+
+    padding: 0.4rem;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+
+    color: var(--color-text);
+    font: inherit;
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease,
+        filter 0.2s ease;
+}
+
+/* Impede que o fundo reapareça ao interagir */
+.battle-action:hover,
+.action-button:hover,
+#confirm-action:hover {
+    background: transparent;
+    box-shadow: none;
+    color: var(--color-primary);
+    transform: translateY(-3px);
+}
+
+/* Ícones das ações */
+.battle-action img,
+.action-button img,
+#confirm-action img {
+    display: block;
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+/* Texto abaixo do ícone */
+.battle-action span,
+.action-button span,
+#confirm-action span {
+    color: inherit;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+/* Indicação visual para teclado */
+.battle-action:focus-visible,
+.action-button:focus-visible,
+#confirm-action:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+}
+
+/* Ações indisponíveis */
+.battle-action:disabled,
+.action-button:disabled,
+#confirm-action:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+}
