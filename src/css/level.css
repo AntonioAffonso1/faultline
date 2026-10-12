@@ -834,7 +834,7 @@
 }
 
 /* Confirmar: separado e alinhado à direita */
-#confirm-action {
+#confirm-action-button {
     position: absolute;
     right: 3%;
     bottom: 4%;
@@ -857,9 +857,9 @@
 }
 
 /* Ícone de confirmação maior */
-#confirm-action img {
-    width: clamp(80px, 9vw, 140px);
-    height: clamp(80px, 9vw, 140px);
+#confirm-action-button img {
+    width: clamp(50px, 9vw, 80px);
+    height: clamp(50px, 9vw, 80px);
 
     object-fit: contain;
     border: none;
@@ -871,33 +871,33 @@
 }
 
 /* Texto do botão */
-#confirm-action span {
+#confirm-action-button span {
     font-size: 0.9rem;
     font-weight: bold;
     text-align: center;
 }
 
 /* Efeito ao passar o mouse */
-#confirm-action:hover {
+#confirm-action-button:hover {
     background: transparent;
     box-shadow: none;
     color: var(--color-primary);
 }
 
-#confirm-action:hover img {
+#confirm-action-button:hover img {
     transform: scale(1.08);
     filter: brightness(1.2);
 }
 
 /* Ajuste para telas menores */
 @media (max-width: 650px) {
-    #confirm-action {
+    #confirm-action-button {
         right: 2%;
         bottom: 3%;
     }
 
-    #confirm-action img {
-        width: 76px;
-        height: 76px;
+    #confirm-action-button img {
+        width: 50px;
+        height: 50px;
     }
 }
