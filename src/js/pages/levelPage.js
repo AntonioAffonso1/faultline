@@ -29,10 +29,13 @@ if (!validMission) {
 function resolveImagePath(path, fallback) {
     if (!path) return fallback;
 
-    // Corrige caminhos antigos salvos nas fichas.
-    const normalizedPath = path
-        .replace(/^assets\/images\//, "src/assets/images/")
-        .replace(/^images\//, "src/assets/images/");
+    let normalizedPath = path.replace(/\\/g, "/");
+
+    if (normalizedPath.startsWith("assets/images/")) {
+        normalizedPath = `src/${normalizedPath}`;
+    } else if (normalizedPath.startsWith("images/")) {
+        normalizedPath = `src/assets/${normalizedPath}`;
+    }
 
     return normalizedPath;
 }
@@ -102,7 +105,7 @@ function initializeBattle() {
         healthText: document.getElementById("health-text"),
         energyBar: document.getElementById("energy-bar"),
         energyText: document.getElementById("energy-text"),
-        targetFeedback: document.getElementById("target-feedback"),
+        targetFeedback: document.getElementById("action-status"),
         damageNumber: document.getElementById("damage-number"),
         skillPanel: document.getElementById("skill-panel"),
         skills: document.getElementById("battle-skills"),
@@ -117,14 +120,151 @@ function initializeBattle() {
         defend: document.getElementById("defend-button")
     };
 
+
+    const enemyElements = {
+        area: document.getElementById("enemy-area"),
+        image: document.getElementById("enemy-image"),
+        name: document.getElementById("enemy-name"),
+        healthBar: document.getElementById("enemy-health-bar"),
+        healthText: document.getElementById("enemy-health-text")
+    };
+
+    const enemies = [
+        {
+            name: "Inimigo de treinamento I",
+            maxHealth: 100,
+            health: 100,
+            damage: 12,
+            image: "src/assets/images/enemies/training-enemy.png"
+        },
+        {
+            name: "Inimigo de treinamento II",
+            maxHealth: 130,
+            health: 130,
+            damage: 16,
+            image: "src/assets/images/enemies/training-enemy.png"
+        },
+        {
+            name: "Inimigo de treinamento III",
+            maxHealth: 160,
+            health: 160,
+            damage: 20,
+            image: "src/assets/images/enemies/training-enemy.png"
+        }
+    ];
+
+    let activeEnemyIndex = 0;
+    let battleFinished = false;
+    let actionInProgress = false;
+
+
+    function getActiveEnemy() {
+        return enemies[activeEnemyIndex];
+    }
+
+    function renderEnemy() {
+        const enemy = getActiveEnemy();
+
+        if (!enemy) {
+            enemyElements.area.hidden = true;
+            return;
+        }
+
+        enemyElements.area.hidden = false;
+        enemyElements.name.textContent = enemy.name;
+        enemyElements.image.src = enemy.image;
+        enemyElements.image.alt = enemy.name;
+
+        enemyElements.healthBar.style.width =
+            `${Math.max(0, enemy.health / enemy.maxHealth * 100)}%`;
+
+        enemyElements.healthText.textContent =
+            `${Math.max(0, enemy.health)} / ${enemy.maxHealth} PV`;
+    }
+
+    function defeatCurrentEnemy() {
+        const defeatedEnemy = getActiveEnemy();
+
+        logMessage(`${defeatedEnemy.name} foi derrotado!`);
+
+        activeEnemyIndex++;
+
+        if (activeEnemyIndex >= enemies.length) {
+            battleFinished = true;
+            enemyElements.area.hidden = true;
+
+            elements.actionStatus.textContent =
+                "Vitória! Todos os inimigos foram derrotados.";
+
+            logMessage("O Despertar concluído: todos os inimigos foram derrotados.");
+
+            for (const button of Object.values(actionButtons)) {
+                button.disabled = true;
+            }
+
+            elements.confirm.disabled = true;
+            return;
+        }
+
+        renderEnemy();
+
+        logMessage(`${getActiveEnemy().name} entrou em combate!`);
+    }
+
+    function enemyTurn() {
+        if (battleFinished) return;
+
+        const character = getActiveCharacter();
+        const enemy = getActiveEnemy();
+
+        if (!character || !enemy) return;
+
+        const damage = character.defending
+            ? Math.max(1, Math.floor(enemy.damage * 0.5))
+            : enemy.damage;
+
+        character.defending = false;
+        character.health = Math.max(0, character.health - damage);
+
+        showDamage(damage);
+        logMessage(`${enemy.name} causou ${damage} de dano a ${character.name}.`);
+
+        if (character.health <= 0) {
+            const nextAliveIndex = party.findIndex(member => member.health > 0);
+
+            if (nextAliveIndex === -1) {
+                battleFinished = true;
+                elements.actionStatus.textContent =
+                    "Derrota: todos os personagens foram derrotados.";
+                logMessage("Toda a equipe foi derrotada.");
+
+                for (const button of Object.values(actionButtons)) {
+                    button.disabled = true;
+                }
+
+                elements.confirm.disabled = true;
+                renderAll();
+                return;
+            }
+
+            activeIndex = nextAliveIndex;
+
+            logMessage(
+                `${character.name} foi derrotado. ${getActiveCharacter().name} assume a linha de frente.`
+            );
+        }
+
+        renderAll();
+    }
+
+
     let activeIndex = 0;
     let turn = 1;
     let selectedAction = null;
     let selectedSkill = null;
     let announcementTimer = null;
 
-    elements.levelName.textContent = elements.levelName.textContent =
-        missions[levelNumber];
+    elements.levelName.textContent = missions[levelNumber];
 
     function getActiveCharacter() {
         return party[activeIndex];
@@ -197,14 +337,12 @@ function initializeBattle() {
                 `party-member${index === activeIndex ? " active" : ""}`;
 
             const image = document.createElement("img");
-            image.src = character.appearance ||
-                "src/assets/images/characters/personagem-01.png";
-            image.alt = "";
-            
             image.src = resolveImagePath(
                 character.appearance,
                 "src/assets/images/characters/personagem-01.png"
             );
+
+            image.alt = `Retrato de ${character.name}`;
 
             image.addEventListener("error", () => {
                 image.onerror = null;
@@ -357,120 +495,311 @@ function initializeBattle() {
         elements.damageNumber.classList.add("show");
     }
 
-    function executeAction() {
-        if (!selectedAction) return;
+
+    async function executeAction() {
+        if (!selectedAction || actionInProgress || battleFinished) return;
 
         const character = getActiveCharacter();
+        const action = selectedAction;
+        const skillId = selectedSkill;
+        const enemyIndexAtStart = activeEnemyIndex;
 
-        if (selectedAction === "attack") {
-            const model = new Character(
-                character.name,
-                character.characterClass,
-                character.attributes,
-                character.id,
-                character.appearance,
-                character.skills ?? []
-            );
-
-            const damage = model.getPhysicalDamage();
-
-            showDamage(damage);
-            elements.targetFeedback.textContent =
-                `Impacto de teste: ${damage} de dano`;
-
-            logMessage(
-                `${character.name} executou um ataque de teste (${damage} de dano).`
-            );
+        if (!character || character.health <= 0) {
+            elements.actionStatus.textContent =
+                "Este personagem não pode agir.";
+            return;
         }
 
-        if (selectedAction === "defend") {
-            character.defending = true;
+        const skill = action === "skill"
+            ? skillDefinitions[skillId]
+            : null;
 
-            logMessage(
-                `${character.name} assumiu postura defensiva. A redução de dano será usada quando houver inimigos.`
-            );
-        }
+        // Validar habilidades e energia antes de consumir o turno.
+        if (action === "skill") {
+            if (!skill) {
+                elements.actionStatus.textContent =
+                    "Habilidade inválida.";
+                return;
+            }
 
-        if (selectedAction === "skill") {
-            const skill = skillDefinitions[selectedSkill];
-
-            if (!skill || character.energy < skill.cost) {
+            if (character.energy < skill.cost) {
                 elements.actionStatus.textContent =
                     "Energia insuficiente para essa habilidade.";
                 return;
             }
 
             if (
-                selectedSkill === "bencao-abissal" &&
+                skillId === "bencao-abissal" &&
                 character.characterClass !== "Anômalo"
             ) {
+                elements.actionStatus.textContent =
+                    "Benção Abissal só pode ser usada por um Anômalo.";
                 return;
             }
+        }
 
-            character.energy -= skill.cost;
+        if (
+            action === "attack" &&
+            character.characterClass === "Anômalo"
+        ) {
+            elements.actionStatus.textContent =
+                "Anômalos precisam utilizar habilidades especiais.";
+            return;
+        }
 
-            if (selectedSkill === "bencao-abissal") {
-                for (const member of party) {
-                    const model = new Character(
-                        member.name,
-                        member.characterClass,
-                        member.attributes,
-                        member.id,
-                        member.appearance,
-                        member.skills ?? []
-                    );
+        actionInProgress = true;
 
-                    member.health = Math.min(
-                        model.getMaxHealth(),
-                        member.health + 15
+        for (const button of Object.values(actionButtons)) {
+            button.disabled = true;
+        }
+
+        elements.confirm.disabled = true;
+
+        try {
+            const enemy = getActiveEnemy();
+
+            if (!enemy) return;
+
+            // ATAQUE FÍSICO
+            if (action === "attack") {
+                const model = new Character(
+                    character.name,
+                    character.characterClass,
+                    character.attributes,
+                    character.id,
+                    character.appearance,
+                    character.skills ?? []
+                );
+
+                const damage = model.getPhysicalDamage();
+
+                enemy.health = Math.max(0, enemy.health - damage);
+
+                showDamage(damage);
+
+                elements.targetFeedback.textContent =
+                    `${damage} de dano causado a ${enemy.name}.`;
+
+                logMessage(
+                    `${character.name} causou ${damage} de dano a ${enemy.name}.`
+                );
+
+                if (enemy.health <= 0) {
+                    defeatCurrentEnemy();
+                }
+            }
+
+            // DEFESA
+            else if (action === "defend") {
+                character.defending = true;
+
+                elements.targetFeedback.textContent =
+                    `${character.name} preparou a defesa.`;
+
+                logMessage(
+                    `${character.name} assumiu uma postura defensiva.`
+                );
+            }
+
+            // HABILIDADES
+            else if (action === "skill") {
+                character.energy -= skill.cost;
+
+                if (skillId === "percepcao") {
+                    const currentEnemy = getActiveEnemy();
+
+                    elements.targetFeedback.textContent =
+                        currentEnemy
+                            ? `Próximo ataque previsto: ${currentEnemy.damage} de dano.`
+                            : "Não há inimigos restantes.";
+
+                    logMessage(
+                        `${character.name} usou Percepção e previu o próximo ataque.`
                     );
                 }
 
-                logMessage(
-                    `${character.name} usou Benção Abissal: a equipe recuperou até 15 PV e recebeu o bônus crítico de teste.`
-                );
-            } else {
-                logMessage(
-                    `${character.name} usou ${skill.name}. Efeito registrado para o protótipo.`
-                );
+                else if (skillId === "estocada-corrompida") {
+                    const currentEnemy = getActiveEnemy();
+
+                    if (currentEnemy) {
+                        const damage = 20;
+
+                        currentEnemy.health = Math.max(
+                            0,
+                            currentEnemy.health - damage
+                        );
+
+                        // Confusão: efeito de teste por um turno.
+                        currentEnemy.confused = true;
+
+                        showDamage(damage);
+
+                        elements.targetFeedback.textContent =
+                            `${damage} de dano e Confusão aplicada.`;
+
+                        logMessage(
+                            `${character.name} usou Estocada Corrompida: ${damage} de dano e Confusão.`
+                        );
+
+                        if (currentEnemy.health <= 0) {
+                            defeatCurrentEnemy();
+                        }
+                    }
+                }
+
+                else if (skillId === "condenacao") {
+                    const currentEnemy = getActiveEnemy();
+
+                    if (currentEnemy) {
+                        currentEnemy.guilt = true;
+                        currentEnemy.damageReduction = 0.25;
+
+                        elements.targetFeedback.textContent =
+                            "Culpa aplicada: 5 de dano por turno.";
+
+                        logMessage(
+                            `${currentEnemy.name} recebeu Culpa: sofrerá 5 de dano por turno e terá seu dano reduzido em 25%.`
+                        );
+                    }
+                }
+
+                else if (skillId === "bencao-abissal") {
+                    let totalHealing = 0;
+
+                    for (const member of party) {
+                        if (member.health <= 0) continue;
+
+                        const model = new Character(
+                            member.name,
+                            member.characterClass,
+                            member.attributes,
+                            member.id,
+                            member.appearance,
+                            member.skills ?? []
+                        );
+
+                        const oldHealth = member.health;
+
+                        member.health = Math.min(
+                            model.getMaxHealth(),
+                            member.health + 15
+                        );
+
+                        totalHealing += member.health - oldHealth;
+                    }
+
+                    elements.targetFeedback.textContent =
+                        "A equipe recuperou PV.";
+
+                    logMessage(
+                        `${character.name} usou Benção Abissal. A equipe recuperou ${totalHealing} PV no total.`
+                    );
+
+                    logMessage(
+                        "O bônus de dano crítico de 15% ainda precisa ser implementado."
+                    );
+                }
+
+                renderSkills();
             }
 
-            elements.targetFeedback.textContent = skill.name;
-        }
+            renderEnemy();
+            renderAll();
 
-        turn++;
-        clearActionSelection();
-        renderAll();
-        renderSkills();
-        showAnnouncement();
+            // Dano contínuo de Culpa.
+            if (!battleFinished) {
+                const currentEnemy = getActiveEnemy();
+
+                if (currentEnemy?.guilt) {
+                    currentEnemy.health = Math.max(
+                        0,
+                        currentEnemy.health - 5
+                    );
+
+                    logMessage(
+                        `${currentEnemy.name} sofreu 5 de dano por Culpa.`
+                    );
+
+                    renderEnemy();
+
+                    if (currentEnemy.health <= 0) {
+                        defeatCurrentEnemy();
+                    }
+                }
+            }
+
+            // Aguarda antes do contra-ataque.
+            await new Promise(resolve => setTimeout(resolve, 700));
+
+            // O novo inimigo não ataca no mesmo turno em que apareceu.
+            if (
+                !battleFinished &&
+                activeEnemyIndex === enemyIndexAtStart
+            ) {
+                enemyTurn();
+            }
+
+            turn++;
+
+            clearActionSelection();
+            renderAll();
+            renderSkills();
+            renderEnemy();
+
+            if (!battleFinished) {
+                showAnnouncement();
+            }
+        } finally {
+            actionInProgress = false;
+
+            if (!battleFinished) {
+                for (const button of Object.values(actionButtons)) {
+                    button.disabled = false;
+                }
+
+                elements.confirm.disabled = true;
+            }
+        }
     }
 
+    // Eventos dos botões de ação
     actionButtons.attack.addEventListener("click", () => {
         selectAction("attack");
+    });
+
+    actionButtons.skill.addEventListener("click", () => {
+        if (elements.skillPanel.hidden) {
+            renderSkills();
+            elements.skillPanel.hidden = false;
+        } else {
+            elements.skillPanel.hidden = true;
+        }
     });
 
     actionButtons.defend.addEventListener("click", () => {
         selectAction("defend");
     });
 
-    actionButtons.skill.addEventListener("click", () => {
-        elements.skillPanel.hidden = !elements.skillPanel.hidden;
+    // Fechar o painel de habilidades, caso exista esse botão no HTML
+    const closeSkillButton = document.getElementById("close-skill-panel");
 
-        if (!elements.skillPanel.hidden) {
-            renderSkills();
-            elements.actionStatus.textContent =
-                "Escolha uma habilidade e confirme.";
-        }
-    });
+    if (closeSkillButton) {
+        closeSkillButton.addEventListener("click", () => {
+            elements.skillPanel.hidden = true;
+        });
+    }
 
-    document.getElementById("close-skill-panel").addEventListener("click", () => {
-        elements.skillPanel.hidden = true;
-    });
-
+    // Confirmar ação selecionada
     elements.confirm.addEventListener("click", executeAction);
 
+    // Inicializar a interface e o combate
+    clearActionSelection();
     renderAll();
     renderSkills();
+    renderEnemy();
+
     showAnnouncement();
+
     logMessage(`Operação ${missions[levelNumber]} iniciada.`);
+    logMessage(`${getActiveEnemy().name} entrou em combate!`);
 }

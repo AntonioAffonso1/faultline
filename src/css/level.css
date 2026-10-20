@@ -901,3 +901,74 @@
         height: 50px;
     }
 }
+
+
+/* Área de exibição do inimigo */
+#enemy-area {
+    position: absolute;
+    top: 22%;
+    right: 12%;
+    width: clamp(150px, 22vw, 270px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    z-index: 2;
+}
+
+#enemy-image {
+    width: 100%;
+    height: 240px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 16px rgba(166, 41, 53, 0.35));
+}
+
+.enemy-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.65rem;
+    background: rgba(16, 16, 20, 0.88);
+    border-left: 2px solid var(--color-primary);
+}
+
+#enemy-name {
+    font-weight: bold;
+    color: var(--color-text);
+}
+
+.enemy-health-track {
+    width: 100%;
+    height: 9px;
+    overflow: hidden;
+    background: #343038;
+}
+
+#enemy-health-bar {
+    width: 100%;
+    height: 100%;
+    background: var(--color-primary);
+    transition: width 0.25s ease;
+}
+
+#enemy-health-text {
+    color: var(--color-muted);
+    font-size: 0.75rem;
+}
+
+#enemy-image.enemy-hit {
+    filter: brightness(1.8) drop-shadow(0 0 18px #A62935);
+}
+
+@media (max-width: 650px) {
+    #enemy-area {
+        top: 20%;
+        right: 3%;
+        width: 36%;
+    }
+
+    #enemy-image {
+        height: 150px;
+    }
+}

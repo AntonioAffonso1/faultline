@@ -45,6 +45,7 @@
             <div class="arena-label arena-label-left">UNIDADE ALIADA</div>
             <div class="arena-label arena-label-right">ALVO DE TREINAMENTO</div>
 
+
             <div id="active-character" class="battle-character">
                 <div class="character-placeholder">
                     <span id="battle-character-initial">?</span>
@@ -63,12 +64,25 @@
                 </div>
             </div>
 
-            <div id="training-target" class="training-target">
-                <div class="target-symbol">?</div>
-                <strong>Alvo de treinamento</strong>
-                <span>Sem inimigos implementados</span>
-                <div id="target-feedback" class="target-feedback"></div>
+            
+    <!-- Área dos inimigos do nível -->
+        <section id="enemy-area" aria-label="Inimigo atual">
+            <img
+                id="enemy-image"
+                src="src/assets/images/enemies/training-enemy.png"
+                alt="Inimigo de treinamento"
+            >
+
+            <div class="enemy-info">
+                <span id="enemy-name">Inimigo de treinamento</span>
+
+                <div class="enemy-health-track">
+                    <div id="enemy-health-bar"></div>
+                </div>
+
+                <span id="enemy-health-text">100 / 100 PV</span>
             </div>
+        </section>
 
             <div id="damage-number" class="damage-number" aria-live="polite"></div>
         </section>
