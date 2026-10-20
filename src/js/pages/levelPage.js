@@ -100,7 +100,7 @@ function initializeBattle() {
         party: document.getElementById("battle-party"),
         characterName: document.getElementById("battle-character-name"),
         characterClass: document.getElementById("battle-character-class"),
-        characterInitial: document.getElementById("battle-character-initial"),
+        characterImage: document.getElementById("battle-character-image"),
         healthBar: document.getElementById("health-bar"),
         healthText: document.getElementById("health-text"),
         energyBar: document.getElementById("energy-bar"),
@@ -380,8 +380,18 @@ function initializeBattle() {
 
         elements.characterName.textContent = character.name;
         elements.characterClass.textContent = character.characterClass;
-        elements.characterInitial.textContent =
-            character.name.trim().charAt(0).toUpperCase() || "?";
+        elements.characterImage.src = resolveImagePath(
+            character.appearance,
+            "src/assets/images/characters/personagem-01.png"
+        );
+
+        elements.characterImage.alt = `Retrato de ${character.name}`;
+
+        elements.characterImage.onerror = () => {
+            elements.characterImage.onerror = null;
+            elements.characterImage.src =
+                "src/assets/images/characters/personagem-01.png";
+        };
 
         elements.healthBar.style.width =
             `${Math.max(0, health / maxHealth * 100)}%`;
@@ -802,4 +812,19 @@ function initializeBattle() {
 
     logMessage(`Operação ${missions[levelNumber]} iniciada.`);
     logMessage(`${getActiveEnemy().name} entrou em combate!`);
+}
+
+const backgroundMusic = document.getElementById(
+    "level-background-music"
+);
+
+if (backgroundMusic) {
+    backgroundMusic.volume = 0.25;
+
+    backgroundMusic.play().catch((error) => {
+        console.warn(
+            "A reprodução automática da música foi bloqueada pelo navegador.",
+            error
+        );
+    });
 }

@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="src/css/global.css">
     <link rel="stylesheet" href="src/css/level.css">
 </head>
+<audio
+    id="level-background-music"
+    src="src/assets/audio/music/level1-2_Music.mp3"
+    loop
+    preload="auto"
+></audio>
 <body>
     <main id="battle-page">
         <div class="battle-background" aria-hidden="true"></div>
@@ -47,9 +53,7 @@
 
 
             <div id="active-character" class="battle-character">
-                <div class="character-placeholder">
-                    <span id="battle-character-initial">?</span>
-                </div>
+                <img id="battle-character-image" class="battle-character-image" alt="Retrato do personagem" />
                 <div class="battle-character-info">
                     <strong id="battle-character-name">Personagem</strong>
                     <span id="battle-character-class">Classe</span>
@@ -64,25 +68,21 @@
                 </div>
             </div>
 
-            
-    <!-- Área dos inimigos do nível -->
-        <section id="enemy-area" aria-label="Inimigo atual">
-            <img
-                id="enemy-image"
-                src="src/assets/images/enemies/training-enemy.png"
-                alt="Inimigo de treinamento"
-            >
 
-            <div class="enemy-info">
-                <span id="enemy-name">Inimigo de treinamento</span>
+            <!-- Área dos inimigos do nível -->
+            <section id="enemy-area" aria-label="Inimigo atual">
+                <img id="enemy-image" src="src/assets/images/enemies/training-enemy.png" alt="Inimigo de treinamento">
 
-                <div class="enemy-health-track">
-                    <div id="enemy-health-bar"></div>
+                <div class="enemy-info">
+                    <span id="enemy-name">Inimigo de treinamento</span>
+
+                    <div class="enemy-health-track">
+                        <div id="enemy-health-bar"></div>
+                    </div>
+
+                    <span id="enemy-health-text">100 / 100 PV</span>
                 </div>
-
-                <span id="enemy-health-text">100 / 100 PV</span>
-            </div>
-        </section>
+            </section>
 
             <div id="damage-number" class="damage-number" aria-live="polite"></div>
         </section>
@@ -127,13 +127,13 @@
         </footer>
 
         <div class="action-status">
-                <span id="action-status"> </span>
-                <button type="button" id="confirm-action-button" disabled>
-                    <img src="src/assets/images/icons/hud/Confirm_Icon.png" alt="">
-                    <span>Confirmar</span>
-                </button>
+            <span id="action-status"> </span>
+            <button type="button" id="confirm-action-button" disabled>
+                <img src="src/assets/images/icons/hud/Confirm_Icon.png" alt="">
+                <span>Confirmar</span>
+            </button>
         </div>
-        
+
         <!-- Registro de combate -->
         <aside class="battle-log" aria-label="Registro de combate">
             <span class="panel-eyebrow">REGISTRO</span>
@@ -142,11 +142,12 @@
             </div>
         </aside>
     </main>
-    
+
     <script src="src/js/uiSound.js"></script>
     <script src="src/js/characters/Character.js"></script>
     <script src="src/js/characters/characterManager.js"></script>
     <script src="src/js/pages/levelPage.js"></script>
     <script src="src/js/pageTransition.js"></script>
 </body>
+
 </html>
