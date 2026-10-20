@@ -129,29 +129,87 @@ function initializeBattle() {
         healthText: document.getElementById("enemy-health-text")
     };
 
-    const enemies = [
-        {
-            name: "Inimigo de treinamento I",
-            maxHealth: 100,
-            health: 100,
-            damage: 12,
-            image: "src/assets/images/enemies/training-enemy.png"
-        },
-        {
-            name: "Inimigo de treinamento II",
-            maxHealth: 130,
-            health: 130,
-            damage: 16,
-            image: "src/assets/images/enemies/training-enemy.png"
-        },
-        {
-            name: "Inimigo de treinamento III",
-            maxHealth: 160,
-            health: 160,
-            damage: 20,
-            image: "src/assets/images/enemies/training-enemy.png"
-        }
-    ];
+    const enemiesByLevel = {
+        1: [
+            {
+                name: "Inimigo de treinamento I",
+                maxHealth: 100,
+                health: 100,
+                damage: 12,
+                image: "src/assets/images/enemies/training-enemy.png"
+            },
+            {
+                name: "Inimigo de treinamento II",
+                maxHealth: 130,
+                health: 130,
+                damage: 16,
+                image: "src/assets/images/enemies/training-enemy.png"
+            },
+            {
+                name: "Inimigo de treinamento III",
+                maxHealth: 160,
+                health: 160,
+                damage: 20,
+                image: "src/assets/images/enemies/training-enemy.png"
+            }
+        ],
+
+        2: [
+            {
+                name: "Habitante da Zona Morta I",
+                maxHealth: 140,
+                health: 140,
+                damage: 16,
+                image: "src/assets/images/enemies/training-enemy.png"
+            },
+            {
+                name: "Habitante da Zona Morta II",
+                maxHealth: 160,
+                health: 160,
+                damage: 18,
+                image: "src/assets/images/enemies/training-enemy.png"
+            },
+            {
+                name: "Habitante da Zona Morta III",
+                maxHealth: 180,
+                health: 180,
+                damage: 20,
+                image: "src/assets/images/enemies/training-enemy.png"
+            },
+            {
+                name: "Habitante da Zona Morta IV",
+                maxHealth: 200,
+                health: 200,
+                damage: 22,
+                image: "src/assets/images/enemies/training-enemy.png"
+            },
+            {
+                name: "Habitante da Zona Morta V",
+                maxHealth: 240,
+                health: 240,
+                damage: 25,
+                image: "src/assets/images/enemies/training-enemy.png"
+            }
+        ],
+
+        3: [
+           {
+            name: "Agente Corrompido",
+            maxHealth: 250,
+            health: 250,
+            damage: 25,
+            image: "src/assets/images/enemies/boss.png"
+           }
+        ]
+    };
+
+    const enemies = enemiesByLevel[levelNumber] ?? [];
+
+    if (enemies.length === 0) {
+        console.error(
+            `Faultline: nenhum inimigo configurado para o nível ${levelNumber}.`
+        );
+    }
 
     let activeEnemyIndex = 0;
     let battleFinished = false;
@@ -196,7 +254,9 @@ function initializeBattle() {
             elements.actionStatus.textContent =
                 "Vitória! Todos os inimigos foram derrotados.";
 
-            logMessage("O Despertar concluído: todos os inimigos foram derrotados.");
+            logMessage(
+                `${missions[levelNumber]} concluído: todos os inimigos foram derrotados.`
+            );
 
             for (const button of Object.values(actionButtons)) {
                 button.disabled = true;
@@ -818,12 +878,23 @@ const backgroundMusic = document.getElementById(
     "level-background-music"
 );
 
+const musicByLevel = {
+    1: "src/assets/audio/music/level1-2_Music.mp3",
+    2: "src/assets/audio/music/level1-2_Music.mp3",
+    3: "src/assets/audio/music/level3_Music.mp3"
+};
+
 if (backgroundMusic) {
+    backgroundMusic.src =
+        musicByLevel[levelNumber] ??
+        musicByLevel[1];
+
+    backgroundMusic.loop = true;
     backgroundMusic.volume = 0.25;
 
     backgroundMusic.play().catch((error) => {
         console.warn(
-            "A reprodução automática da música foi bloqueada pelo navegador.",
+            "Não foi possível iniciar a música automaticamente.",
             error
         );
     });
