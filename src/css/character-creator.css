@@ -29,7 +29,7 @@
     z-index: -2;
 
     background:
-        url("../assets/images/backgrounds/MenuBG.jpg")
+        url("../assets/images/backgrounds/MenuBG.gif")
         center / cover no-repeat;
 
     filter: blur(6px);

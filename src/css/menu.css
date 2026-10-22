@@ -25,7 +25,7 @@
             rgba(16, 16, 20, 0.55) 45%,
             rgba(16, 16, 20, 0.15) 100%
         ),
-        url("../assets/images/backgrounds/MenuBG.jpg");
+        url("../assets/images/backgrounds/MenuBG.gif");
 
     background-size: cover;
     background-position: center;
@@ -237,4 +237,24 @@ body:has(.main-menu) #app {
     height: 100vh;
     min-height: 100vh;
     overflow: hidden;
+}
+
+
+/* Organização do conteúdo dos botões do menu */
+
+#menu-buttons button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    text-align: left;
+    padding-left: 24px;
+}
+
+/* Ícones maiores */
+.menu-button-icon {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
