@@ -193,13 +193,13 @@ function initializeBattle() {
         ],
 
         3: [
-           {
-            name: "Agente Corrompido",
-            maxHealth: 250,
-            health: 250,
-            damage: 25,
-            image: "src/assets/images/enemies/boss.png"
-           }
+            {
+                name: "Agente Corrompido",
+                maxHealth: 250,
+                health: 250,
+                damage: 25,
+                image: "src/assets/images/enemies/boss.png"
+            }
         ]
     };
 
@@ -240,6 +240,47 @@ function initializeBattle() {
             `${Math.max(0, enemy.health)} / ${enemy.maxHealth} PV`;
     }
 
+    function finishVictory() {
+        battleFinished = true;
+
+        const victorySummary = {
+            missionName: missions[levelNumber],
+            defeatedEnemies: enemies.length,
+            totalEnemies: enemies.length,
+
+            team: party.map(character => {
+                const model = new Character(
+                    character.name,
+                    character.characterClass,
+                    character.attributes,
+                    character.id,
+                    character.appearance,
+                    character.skills ?? []
+                );
+
+                return {
+                    name: character.name,
+                    characterClass: character.characterClass,
+                    appearance: character.appearance,
+                    health: character.health,
+                    maxHealth: model.getMaxHealth()
+                };
+            })
+        };
+
+        localStorage.setItem(
+            "faultline_completed_level",
+            String(levelNumber)
+        );
+
+        localStorage.setItem(
+            "faultline_victory_summary",
+            JSON.stringify(victorySummary)
+        );
+
+        window.location.href = "victory.html";
+    }
+
     function defeatCurrentEnemy() {
         const defeatedEnemy = getActiveEnemy();
 
@@ -248,21 +289,13 @@ function initializeBattle() {
         activeEnemyIndex++;
 
         if (activeEnemyIndex >= enemies.length) {
-            battleFinished = true;
             enemyElements.area.hidden = true;
-
-            elements.actionStatus.textContent =
-                "Vitória! Todos os inimigos foram derrotados.";
 
             logMessage(
                 `${missions[levelNumber]} concluído: todos os inimigos foram derrotados.`
             );
 
-            for (const button of Object.values(actionButtons)) {
-                button.disabled = true;
-            }
-
-            elements.confirm.disabled = true;
+            finishVictory();
             return;
         }
 

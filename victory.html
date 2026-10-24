@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Missão concluída — Faultline</title>
+
+    <link rel="stylesheet" href="src/css/global.css">
+    <link rel="stylesheet" href="src/css/victory.css">
+</head>
+<body>
+    <main id="victory-page">
+        <header class="victory-header">
+            <span>FAULTLINE</span>
+            <span>RELATÓRIO DE OPERAÇÃO</span>
+        </header>
+
+        <section class="victory-hero">
+            <p class="victory-eyebrow">REGISTRO DE COMBATE FINALIZADO</p>
+            <h1>MISSÃO CONCLUÍDA</h1>
+            <p id="victory-mission-name">Missão</p>
+            <div class="victory-divider"></div>
+            <p class="victory-message">
+                A ameaça foi neutralizada. A equipe pode prosseguir.
+            </p>
+        </section>
+
+        <section class="victory-summary">
+            <article class="summary-card">
+                <span>RESULTADO</span>
+                <strong>VITÓRIA</strong>
+            </article>
+
+            <article class="summary-card">
+                <span>INIMIGOS DERROTADOS</span>
+                <strong id="victory-enemies">0 / 0</strong>
+            </article>
+
+            <article class="summary-card">
+                <span>MEMBROS DA EQUIPE</span>
+                <strong id="victory-team-count">0</strong>
+            </article>
+        </section>
+
+        <section class="victory-team-section">
+            <p class="section-eyebrow">RELATÓRIO DA EQUIPE</p>
+            <h2>Estado dos combatentes</h2>
+
+            <div id="victory-team" class="victory-team"></div>
+        </section>
+
+        <p id="victory-feedback" class="victory-feedback" role="status"></p>
+
+        <footer class="victory-actions">
+            <button id="campaign-button" class="victory-button secondary">
+                Voltar à campanha
+            </button>
+
+            <button id="menu-button" class="victory-button primary">
+                Menu principal
+            </button>
+        </footer>
+
+        <footer class="victory-footer">
+            <span>FAULTLINE</span>
+            <span>FIM DO RELATÓRIO</span>
+        </footer>
+    </main>
+
+    <script src="src/js/pages/victoryPage.js"></script>
+    <script src="src/js/pageTransition.js"></script>
+</body>
+</html>
