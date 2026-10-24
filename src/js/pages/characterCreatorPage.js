@@ -11,11 +11,16 @@ const pointsRemaining = document.getElementById("points-remaining");
 const pointsProgress = document.getElementById("points-progress");
 const feedback = document.getElementById("form-feedback");
 const saveButton = document.getElementById("save-character-button");
-const appearanceGallery = document.getElementById("appearance-gallery");
 const appearancePreview = document.getElementById("appearance-preview");
 const appearanceSelectedLabel = document.getElementById(
     "appearance-selected-label"
 );
+const appearanceUpload = document.getElementById("appearance-upload");
+
+const defaultAppearance =
+    "src/assets/images/characters/personagem-01.png";
+
+let selectedAppearance = defaultAppearance;
 
 const availableAppearances = [
     {
@@ -25,7 +30,7 @@ const availableAppearances = [
     }
 ];
 
-let selectedAppearance = availableAppearances[0].src;
+
 
 const TOTAL_POINTS = 20;
 const BASE_ATTRIBUTE = 5;
@@ -127,7 +132,7 @@ if (requestedId) {
         nameInput.value = existingCharacter.name;
         classInput.value = existingCharacter.characterClass;
         attributes = { ...existingCharacter.attributes };
-        
+
         selectedSkills = (existingCharacter.skills ?? [])
             .filter(skillId => {
                 const skill = skillDefinitions.find(
@@ -136,15 +141,12 @@ if (requestedId) {
 
                 return skill &&
                     (!skill.restriction ||
-                     skill.restriction === existingCharacter.characterClass);
+                        skill.restriction === existingCharacter.characterClass);
             })
             .slice(0, 3);
 
-        selectedAppearance = availableAppearances.some(
-            appearance => appearance.src === existingCharacter.appearance
-            )
-        ? existingCharacter.appearance
-        : availableAppearances[0].src;
+        selectedAppearance =
+            existingCharacter.appearance || defaultAppearance;
 
         document.getElementById("creator-heading").textContent =
             "Editar personagem";
@@ -153,70 +155,71 @@ if (requestedId) {
     }
 }
 
-function renderAppearanceGallery() {
-    appearanceGallery.replaceChildren();
 
-    for (const appearance of availableAppearances) {
-        const option = document.createElement("button");
+// Atualiza a prévia do retrato.
+function updateAppearancePreview() {
+    appearancePreview.src = selectedAppearance;
+    appearancePreview.alt = "Prévia do retrato do personagem";
 
-        option.type = "button";
-        option.className = "appearance-option";
-        option.dataset.appearance = appearance.src;
-        option.setAttribute("aria-label", appearance.name);
-        option.setAttribute(
-            "aria-pressed",
-            String(appearance.src === selectedAppearance)
-        );
+    appearanceSelectedLabel.textContent =
+        selectedAppearance === defaultAppearance
+            ? "Retrato padrão selecionado"
+            : "Imagem personalizada selecionada";
+}
 
-        if (appearance.src === selectedAppearance) {
-            option.classList.add("selected");
+// Permite ao jogador carregar uma imagem do computador.
+appearanceUpload.addEventListener("change", () => {
+    const file = appearanceUpload.files[0];
+
+    if (!file) return;
+
+    const allowedTypes = [
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+        "image/gif"
+    ];
+
+    // Valida o formato do arquivo.
+    if (!allowedTypes.includes(file.type)) {
+        feedback.textContent =
+            "Formato inválido. Escolha PNG, JPG, WEBP ou GIF.";
+
+        appearanceUpload.value = "";
+        return;
+    }
+
+    // Limita o arquivo a 2 MB para reduzir o uso do localStorage.
+    if (file.size > 2 * 1024 * 1024) {
+        feedback.textContent =
+            "A imagem deve ter no máximo 2 MB.";
+
+        appearanceUpload.value = "";
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+        if (typeof reader.result !== "string") {
+            feedback.textContent =
+                "Não foi possível carregar essa imagem.";
+            return;
         }
 
-        const image = document.createElement("img");
-        image.src = appearance.src;
-        image.alt = appearance.name;
-        image.loading = "lazy";
+        selectedAppearance = reader.result;
+        updateAppearancePreview();
+        feedback.textContent = "";
+    };
 
-        option.append(image);
-        appearanceGallery.append(option);
-    }
+    reader.onerror = () => {
+        feedback.textContent =
+            "Ocorreu um erro ao ler a imagem selecionada.";
+    };
 
-    updateAppearancePreview();
-}
-
-function updateAppearancePreview() {
-    const appearance = availableAppearances.find(
-        item => item.src === selectedAppearance
-    );
-
-    if (!appearance) return;
-
-    appearancePreview.src = appearance.src;
-    appearancePreview.alt = `Retrato de ${appearance.name}`;
-    appearanceSelectedLabel.textContent =
-        `Selecionado: ${appearance.name}`;
-
-    const options = appearanceGallery.querySelectorAll(
-        ".appearance-option"
-    );
-
-    for (const option of options) {
-        const isSelected =
-            option.dataset.appearance === selectedAppearance;
-
-        option.classList.toggle("selected", isSelected);
-        option.setAttribute("aria-pressed", String(isSelected));
-    }
-}
-
-appearanceGallery.addEventListener("click", event => {
-    const option = event.target.closest(".appearance-option");
-
-    if (!option) return;
-
-    selectedAppearance = option.dataset.appearance;
-    updateAppearancePreview();
+    reader.readAsDataURL(file);
 });
+
 
 
 // Cria os controles de atributo usando os dados da configuração.
@@ -608,5 +611,5 @@ classSelector?.addEventListener("change", () => {
 renderAttributeControls();
 updateClassInformation();
 updatePreview();
-renderAppearanceGallery();
+updateAppearancePreview();
 renderSkills();

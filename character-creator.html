@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,38 +37,30 @@
                     <p class="panel-index">01 / IDENTIDADE</p>
                     <h2>Identificação</h2>
 
-                <section class="appearance-selector">
-                    <h3>Aparência</h3>
 
-                    <div class="appearance-preview">
-                        <img
-                            id="appearance-preview"
-                            src="src/assets/images/characters/personagem-01.png"
-                            alt="Retrato do personagem selecionado"
-                        >
-                    </div>
+                    <section class="appearance-selector">
+                        <h3>Retrato do personagem</h3>
 
-                    <p id="appearance-selected-label" class="appearance-hint">
-                        Aparência selecionada
-                    </p>
+                        <div class="appearance-preview">
+                            <img id="appearance-preview" src="src/assets/images/characters/personagem-01.png"
+                                alt="Prévia do retrato do personagem">
+                        </div>
 
-                    <div
-                        id="appearance-gallery"
-                        class="appearance-gallery"
-                        aria-label="Galeria de aparências"
-                    ></div>
-                </section>
+                        <label for="appearance-upload" class="upload-button">
+                            Escolher imagem
+                        </label>
+
+                        <input id="appearance-upload" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+
+                        <p id="appearance-selected-label" class="appearance-hint">
+                            Nenhuma imagem personalizada selecionada.
+                        </p>
+                    </section>
+
 
                     <label for="character-name">Nome do personagem</label>
-                    <input
-                        id="character-name"
-                        name="characterName"
-                        type="text"
-                        maxlength="30"
-                        placeholder="Digite um nome..."
-                        autocomplete="off"
-                        required
-                    >
+                    <input id="character-name" name="characterName" type="text" maxlength="30"
+                        placeholder="Digite um nome..." autocomplete="off" required>
 
                     <p class="field-hint">Máximo de 30 caracteres.</p>
 
@@ -137,15 +130,15 @@
                 </section>
 
             </div>
-            
-        <!-- Seleção de habilidades -->
-        <section class="skills-section">
-            <div class="skills-heading">
-                <div>
-                    <span class="skills-eyebrow">CONFIGURAÇÃO DE COMBATE</span>
-                    <h2>Habilidades</h2>
-                    <p>Escolha até três habilidades para seu personagem.</p>
-                </div>
+
+            <!-- Seleção de habilidades -->
+            <section class="skills-section">
+                <div class="skills-heading">
+                    <div>
+                        <span class="skills-eyebrow">CONFIGURAÇÃO DE COMBATE</span>
+                        <h2>Habilidades</h2>
+                        <p>Escolha até três habilidades para seu personagem.</p>
+                    </div>
 
                     <span class="skills-counter" id="skills-counter">0 / 3</span>
                 </div>
@@ -158,8 +151,7 @@
 
                     <section class="skills-available-panel">
                         <h3>Habilidades disponíveis</h3>
-                        <div id="available-skills"
-                            class="available-skills"
+                        <div id="available-skills" class="available-skills"
                             aria-label="Lista de habilidades disponíveis">
                         </div>
                     </section>
@@ -253,4 +245,5 @@
     <script src="src/js/pages/characterCreatorPage.js"></script>
     <script src="src/js/pageTransition.js"></script>
 </body>
+
 </html>
