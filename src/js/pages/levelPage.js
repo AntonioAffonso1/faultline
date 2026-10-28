@@ -57,7 +57,8 @@ function initializeBattle() {
                 data.skills ?? []
             ).getMaxHealth(),
             energy: Number(data.energy ?? 100),
-            defending: false
+            defending: false,
+            dodging: false
         }));
 
     if (party.length !== pendingMission.teamIds.length || party.length === 0) {
@@ -69,25 +70,25 @@ function initializeBattle() {
         percepcao: {
             name: "Percepção",
             icon: "percepcao.png",
-            description: "Visualiza o próximo ataque do inimigo.",
+            description: "Desvia de um golpe, evitando completamente o dano do inimigo.",
             cost: 15
         },
         "estocada-corrompida": {
             name: "Estocada Corrompida",
             icon: "estocada-corrompida.png",
-            description: "Ataque corrompido que causa Confusão por 1 turno.",
+            description: "Ataque imbuído com corrupção que causa Confusão, impedindo o inimigo de agir por 1 turno. O dano é calculado com base nos pontos de Poder.",
             cost: 25
         },
         condenacao: {
             name: "Condenação",
             icon: "condenacao.png",
-            description: "Aplica Culpa: 5 de dano por turno e reduz o dano inimigo em 25%.",
+            description: "Aplica Culpa: 20 de dano por turno e reduz o dano inimigo em 50%.",
             cost: 45
         },
         "bencao-abissal": {
             name: "Benção Abissal",
             icon: "bencao-abissal.png",
-            description: "Recupera 15 PV de toda a equipe e aumenta o dano crítico em 15%.",
+            description: "Recupera 50 PV de toda a equipe.",
             cost: 50
         }
     };
@@ -160,43 +161,43 @@ function initializeBattle() {
                 maxHealth: 140,
                 health: 140,
                 damage: 16,
-                image: "src/assets/images/enemies/training-enemy.png"
+                image: "src/assets/images/enemies/enemy2.png"
             },
             {
                 name: "Habitante da Zona Morta II",
                 maxHealth: 160,
                 health: 160,
                 damage: 18,
-                image: "src/assets/images/enemies/training-enemy.png"
+                image: "src/assets/images/enemies/enemy2.png"
             },
             {
                 name: "Habitante da Zona Morta III",
                 maxHealth: 180,
                 health: 180,
                 damage: 20,
-                image: "src/assets/images/enemies/training-enemy.png"
+                image: "src/assets/images/enemies/enemy2.png"
             },
             {
                 name: "Habitante da Zona Morta IV",
                 maxHealth: 200,
                 health: 200,
                 damage: 22,
-                image: "src/assets/images/enemies/training-enemy.png"
+                image: "src/assets/images/enemies/enemy2.png"
             },
             {
                 name: "Habitante da Zona Morta V",
                 maxHealth: 240,
                 health: 240,
                 damage: 25,
-                image: "src/assets/images/enemies/training-enemy.png"
+                image: "src/assets/images/enemies/enemy2.png"
             }
         ],
 
         3: [
             {
                 name: "Agente Corrompido",
-                maxHealth: 250,
-                health: 250,
+                maxHealth: 750,
+                health: 750,
                 damage: 25,
                 image: "src/assets/images/enemies/boss.png"
             }
@@ -312,6 +313,25 @@ function initializeBattle() {
 
         if (!character || !enemy) return;
 
+        // ESQUIVA: evita completamente o próximo golpe.
+        if (character.dodging) {
+            character.dodging = false;
+
+            // A esquiva também encerra uma defesa anterior, se houver.
+            character.defending = false;
+
+            elements.targetFeedback.textContent =
+                `${character.name} esquivou do golpe! Nenhum dano recebido.`;
+
+            logMessage(
+                `${character.name} usou Percepção e esquivou do ataque de ${enemy.name}, evitando todo o dano.`
+            );
+
+            renderAll();
+            return;
+        }
+
+        // DEFESA: reduz o dano recebido pela metade.
         const damage = character.defending
             ? Math.max(1, Math.floor(enemy.damage * 0.5))
             : enemy.damage;
@@ -320,7 +340,10 @@ function initializeBattle() {
         character.health = Math.max(0, character.health - damage);
 
         showDamage(damage);
-        logMessage(`${enemy.name} causou ${damage} de dano a ${character.name}.`);
+
+        logMessage(
+            `${enemy.name} causou ${damage} de dano a ${character.name}.`
+        );
 
         if (character.health <= 0) {
             const nextAliveIndex = party.findIndex(member => member.health > 0);
@@ -363,6 +386,19 @@ function initializeBattle() {
         return party[activeIndex];
     }
 
+    function recoverTeamEnergy() {
+    for (const character of party) {
+        character.energy = Math.min(
+            100,
+            character.energy + 10
+        );
+    }
+
+    logMessage(
+        "Todos os agentes recuperaram 10 de energia."
+    );
+}
+
     function logMessage(message) {
         const paragraph = document.createElement("p");
         paragraph.textContent = message;
@@ -372,7 +408,7 @@ function initializeBattle() {
             elements.log.lastElementChild.remove();
         }
     }
-
+    
     function showAnnouncement() {
         elements.turnCounter.textContent = String(turn).padStart(2, "0");
         elements.announcementText.textContent =
@@ -709,15 +745,13 @@ function initializeBattle() {
                 character.energy -= skill.cost;
 
                 if (skillId === "percepcao") {
-                    const currentEnemy = getActiveEnemy();
+                    character.dodging = true;
 
                     elements.targetFeedback.textContent =
-                        currentEnemy
-                            ? `Próximo ataque previsto: ${currentEnemy.damage} de dano.`
-                            : "Não há inimigos restantes.";
+                        `${character.name} se preparou para esquivar do próximo golpe.`;
 
                     logMessage(
-                        `${character.name} usou Percepção e previu o próximo ataque.`
+                        `${character.name} usou Percepção e se preparou para esquivar do próximo golpe inimigo.`
                     );
                 }
 
@@ -725,7 +759,10 @@ function initializeBattle() {
                     const currentEnemy = getActiveEnemy();
 
                     if (currentEnemy) {
-                        const damage = 20;
+                        const damage = Math.max(
+                            0,
+                            Number(character.attributes?.power ?? 0) * 5
+                        );
 
                         currentEnemy.health = Math.max(
                             0,
@@ -755,13 +792,13 @@ function initializeBattle() {
 
                     if (currentEnemy) {
                         currentEnemy.guilt = true;
-                        currentEnemy.damageReduction = 0.25;
+                        currentEnemy.damageReduction = 0.50;
 
                         elements.targetFeedback.textContent =
-                            "Culpa aplicada: 5 de dano por turno.";
+                            "Culpa aplicada: 20 de dano por turno.";
 
                         logMessage(
-                            `${currentEnemy.name} recebeu Culpa: sofrerá 5 de dano por turno e terá seu dano reduzido em 25%.`
+                            `${currentEnemy.name} recebeu Culpa: sofrerá 20 de dano por turno e terá seu dano reduzido em 25%.`
                         );
                     }
                 }
@@ -785,7 +822,7 @@ function initializeBattle() {
 
                         member.health = Math.min(
                             model.getMaxHealth(),
-                            member.health + 15
+                            member.health + 50
                         );
 
                         totalHealing += member.health - oldHealth;
@@ -816,11 +853,11 @@ function initializeBattle() {
                 if (currentEnemy?.guilt) {
                     currentEnemy.health = Math.max(
                         0,
-                        currentEnemy.health - 5
+                        currentEnemy.health - 20
                     );
 
                     logMessage(
-                        `${currentEnemy.name} sofreu 5 de dano por Culpa.`
+                        `${currentEnemy.name} sofreu 20 de dano por Culpa.`
                     );
 
                     renderEnemy();
@@ -842,6 +879,8 @@ function initializeBattle() {
                 enemyTurn();
             }
 
+            recoverTeamEnergy();
+            
             turn++;
 
             clearActionSelection();

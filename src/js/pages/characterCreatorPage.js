@@ -1,7 +1,4 @@
-// ========================================
-// FAULTLINE — CRIADOR DE PERSONAGENS
-// ========================================
-
+//criação das fichas
 
 const form = document.getElementById("character-form");
 const nameInput = document.getElementById("character-name");
@@ -84,7 +81,7 @@ const skillDefinitions = [
         id: "percepcao",
         name: "Percepção",
         icon: "percepcao.png",
-        description: "Visualiza o próximo ataque do inimigo.",
+        description: "Desvia de um golpe, evitando completamente o dano do inimigo.",
         cost: 15,
         restriction: null
     },
@@ -93,7 +90,7 @@ const skillDefinitions = [
         name: "Estocada Corrompida",
         icon: "estocada-corrompida.png",
         description:
-            "Ataque imbuído com corrupção que causa Confusão, impedindo o inimigo de agir por 1 turno.",
+             "Ataque imbuído com corrupção que causa Confusão, impedindo o inimigo de agir por 1 turno. O dano é calculado com base nos pontos de Poder.",
         cost: 25,
         restriction: null
     },
@@ -102,7 +99,7 @@ const skillDefinitions = [
         name: "Condenação",
         icon: "condenacao.png",
         description:
-            "Aplica Culpa: causa 5 de dano por turno e reduz o dano do inimigo em 25%.",
+            "Aplica Culpa: causa 20 de dano por turno e reduz o dano do inimigo em 50%.",
         cost: 45,
         restriction: null
     },
@@ -111,7 +108,7 @@ const skillDefinitions = [
         name: "Benção Abissal",
         icon: "bencao-abissal.png",
         description:
-            "Recupera 15 PV de toda a equipe e aumenta o dano crítico em 15%.",
+            "Recupera 50 PV de toda a equipe.",
         cost: 50,
         restriction: "Anômalo"
     }

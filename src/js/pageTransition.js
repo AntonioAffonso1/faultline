@@ -1,5 +1,4 @@
-// Faultline — Transições entre páginas
-
+// transições
 const transitionLayer = document.createElement("div");
 
 transitionLayer.id = "page-transition";
