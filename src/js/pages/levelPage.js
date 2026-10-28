@@ -82,7 +82,7 @@ function initializeBattle() {
         condenacao: {
             name: "Condenação",
             icon: "condenacao.png",
-            description: "Aplica Culpa: 20 de dano por turno e reduz o dano inimigo em 50%.",
+            description: "Aplica Culpa: 20 de dano por turno e reduz o dano recebido do inimigo em 50%.",
             cost: 45
         },
         "bencao-abissal": {

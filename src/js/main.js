@@ -1,3 +1,5 @@
+// apenas configurações do menu como botões e etc
+
 const createCharacterButton = document.getElementById(
     "create-character-button"
 );

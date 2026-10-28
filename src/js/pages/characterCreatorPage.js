@@ -99,7 +99,7 @@ const skillDefinitions = [
         name: "Condenação",
         icon: "condenacao.png",
         description:
-            "Aplica Culpa: causa 20 de dano por turno e reduz o dano do inimigo em 50%.",
+            "Aplica Culpa: causa 20 de dano por turno e reduz o dano recebido do inimigo em 50%.",
         cost: 45,
         restriction: null
     },
